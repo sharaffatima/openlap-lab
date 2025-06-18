@@ -318,26 +318,28 @@ const SpecifyRequirements = () => {
                                 onChange={handleFormData}
                               />
                             </Grid>
-                            <Grid item>
-                              <Tooltip title="Confirm">
-                                <IconButton
-                                  color="primary"
-                                  onClick={handleToggleGoalEdit}
-                                  disabled={
-                                    requirements.goal.length < 1 ||
-                                    requirements.goalType.verb.length < 1
-                                  }
-                                >
-                                  <DoneIcon />
-                                </IconButton>
-                              </Tooltip>
-                            </Grid>
                           </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
+
                 </Grid>
+                                  <Grid item xs={12}>
+                        <Grid container spacing={2} justifyContent="center">
+                          <Grid item xs={12} md={6} mt={3}>
+                                  <Button fullWidth variant="contained"
+                                  color="primary"
+                                  onClick={handleToggleGoalEdit}
+                                  disabled={
+                                    requirements.goal.length < 1 ||
+                                    requirements.goalType.verb.length < 1
+                                  }>
+                                    Confirm
+                            </Button>   
+                          </Grid>
+                        </Grid>
+                    </Grid>
               </>
             ) : (
               <>
@@ -398,19 +400,20 @@ const SpecifyRequirements = () => {
                                 onChange={handleFormData}
                               />
                             </Grid>
-                            <Grid item>
-                              <Tooltip title="Confirm">
-                                <IconButton
-                                  color="primary"
-                                  onClick={handleToggleQuestionEdit}
-                                  disabled={requirements.question.length < 1}
-                                >
-                                  <DoneIcon />
-                                </IconButton>
-                              </Tooltip>
-                            </Grid>
                           </Grid>
                         </Grid>
+                                          <Grid item xs={12}>
+                        <Grid container spacing={2} justifyContent="center">
+                          <Grid item xs={12} md={6} mt={3}>
+                                  <Button fullWidth variant="contained"
+                                  color="primary"
+                                  onClick={handleToggleQuestionEdit}
+                                  disabled={requirements.question.length < 1}>
+                                    Confirm
+                            </Button>   
+                          </Grid>
+                        </Grid>
+                    </Grid>
                       </Grid>
                     </Grid>
                   </>
@@ -503,7 +506,7 @@ const SpecifyRequirements = () => {
                   }
                   onClick={handleUnlockPath}
                 >
-                  Next
+                  Confirm
                 </Button>
               </Grid>
             </Grid>
