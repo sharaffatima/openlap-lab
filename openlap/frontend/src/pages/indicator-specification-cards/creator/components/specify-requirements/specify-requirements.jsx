@@ -1,4 +1,7 @@
-import React, { useContext, useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   Accordion,
   AccordionActions,
@@ -13,15 +16,11 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { ISCContext } from "../../indicator-specification-card.jsx";
-import GoalList from "./components/goal-list.jsx";
-import DataList from "./components/data-list.jsx";
+import { useContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import EditIcon from "@mui/icons-material/Edit";
-import CloseIcon from "@mui/icons-material/Close";
-import DoneIcon from "@mui/icons-material/Done";
+import { ISCContext } from "../../indicator-specification-card.jsx";
+import DataList from "./components/data-list.jsx";
+import GoalList from "./components/goal-list.jsx";
 
 const SpecifyRequirements = () => {
   const {
@@ -335,7 +334,7 @@ const SpecifyRequirements = () => {
                                     requirements.goal.length < 1 ||
                                     requirements.goalType.verb.length < 1
                                   }>
-                                    Confirm
+                                    CONFIRM
                             </Button>   
                           </Grid>
                         </Grid>
@@ -409,7 +408,7 @@ const SpecifyRequirements = () => {
                                   color="primary"
                                   onClick={handleToggleQuestionEdit}
                                   disabled={requirements.question.length < 1}>
-                                    Confirm
+                                    CONFIRM
                             </Button>   
                           </Grid>
                         </Grid>
@@ -491,6 +490,7 @@ const SpecifyRequirements = () => {
             )}
           </Grid>
         </AccordionDetails>
+      {requirements.show.indicatorName && (  //the "NEXT" Button is only visible after the last step
         <AccordionActions sx={{ py: 2 }}>
           <Grid item xs={12}>
             <Grid container spacing={2} justifyContent="center">
@@ -502,16 +502,25 @@ const SpecifyRequirements = () => {
                     requirements.goalType.verb === "" ||
                     requirements.goal === "" ||
                     requirements.question === "" ||
-                    requirements.indicatorName === ""
+                    requirements.indicatorName === "" ||
+                    // Disable if any data field is empty
+                    requirements.data.length === 0 ||
+                    requirements.data.some(
+                      (item) =>
+                        !item.value || //Check if "i need data" field is empty
+                        !item.type || //Check if "column type" field is empty (this is a safety check tp prevent errors)
+                        !item.type.type //Check if "column type" field is selected
+                    )
                   }
                   onClick={handleUnlockPath}
                 >
-                  Confirm
+                  NEXT
                 </Button>
               </Grid>
             </Grid>
           </Grid>
-        </AccordionActions>
+          </AccordionActions>
+      )}
       </Accordion>
     </>
   );
