@@ -128,7 +128,7 @@ const IndicatorSpecificationCard = () => {
           },
         };
   });
-
+const [globalShowSummary, setGlobalShowSummary] = useState(true);
   const prevDependencies = useRef({
     requirements,
     dataset,
@@ -175,18 +175,22 @@ const IndicatorSpecificationCard = () => {
 
   return (
     <>
-      <ISCContext.Provider
-        value={{
-          id,
-          requirements,
-          setRequirements,
-          lockedStep,
-          setLockedStep,
-          visRef,
-          setVisRef,
-          dataset,
-          setDataset,
-        }}
+<ISCContext.Provider
+  value={{
+    id,
+    requirements,
+    setRequirements,
+    lockedStep,
+    setLockedStep,
+    visRef,
+    setVisRef,
+    dataset,
+    setDataset,
+    globalShowSummary,        // 
+    setGlobalShowSummary,     // Global Hide All Summary
+  }}
+
+
       >
         <Grid container spacing={2}>
           <Typography>ISC Creator</Typography>

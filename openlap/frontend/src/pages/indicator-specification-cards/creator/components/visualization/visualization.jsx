@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   Accordion,
   AccordionActions,
@@ -22,6 +22,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 
 const Visualization = () => {
+  const { globalShowSummary } = useContext(ISCContext);
+  useEffect(() => {
+      setState((prev) => ({
+        ...prev,
+        showSelections: globalShowSummary,
+      }));
+    }, [globalShowSummary]);
+
+
   const {
     requirements,
     setRequirements,
@@ -123,7 +132,7 @@ const Visualization = () => {
                             title={
                               !state.showSelections
                                 ? "Show summary"
-                                : "Hide summary"
+                                : "Hide summary!"
                             }
                           >
                             <IconButton onClick={handleToggleShowSelection}>

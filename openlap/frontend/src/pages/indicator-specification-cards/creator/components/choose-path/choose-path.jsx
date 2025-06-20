@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -20,6 +20,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 
 const ChoosePath = () => {
+  const { globalShowSummary } = useContext(ISCContext);
+  useEffect(() => {
+    setState((prev) => ({
+      ...prev,
+      showSelections: globalShowSummary,
+    }));
+  }, [globalShowSummary]);
+
+
   const { requirements, setRequirements, lockedStep, setLockedStep } =
     useContext(ISCContext);
   const [state, setState] = useState({
@@ -176,7 +185,7 @@ const ChoosePath = () => {
                             title={
                               !state.showSelections
                                 ? "Show summary"
-                                : "Hide summary"
+                                : "Hide summary!"
                             }
                           >
                             <IconButton onClick={handleToggleShowSelection}>
