@@ -499,11 +499,19 @@ const SpecifyRequirements = () => {
                     requirements.goalType.verb === "" ||
                     requirements.goal === "" ||
                     requirements.question === "" ||
-                    requirements.indicatorName === ""
+                    requirements.indicatorName === "" ||  requirements.data.some(
+  (item) =>
+    typeof item.value !== "string" ||
+    item.value.trim() === "" ||
+    !item.type ||
+    typeof item.type.type !== "string" ||
+    item.type.type.trim() === ""
+)
+                    
                   }
                   onClick={handleUnlockPath}
                 >
-                  Next
+                  Next 
                 </Button>
               </Grid>
             </Grid>
