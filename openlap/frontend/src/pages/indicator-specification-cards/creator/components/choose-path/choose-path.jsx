@@ -20,6 +20,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 
 const ChoosePath = () => {
+  // Used if Hide All Summary is used
   const { globalShowSummary } = useContext(ISCContext);
   useEffect(() => {
     setState((prev) => ({
@@ -185,7 +186,7 @@ const ChoosePath = () => {
                             title={
                               !state.showSelections
                                 ? "Show summary"
-                                : "Hide summary!"
+                                : "Hide summary"
                             }
                           >
                             <IconButton onClick={handleToggleShowSelection}>

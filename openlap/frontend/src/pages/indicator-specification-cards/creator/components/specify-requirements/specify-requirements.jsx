@@ -25,12 +25,20 @@ import DoneIcon from "@mui/icons-material/Done";
 
 const SpecifyRequirements = () => {
   const { globalShowSummary, setGlobalShowSummary } = useContext(ISCContext);
-  useEffect(() => {
+  const [isGlobalHidden, setIsGlobalHidden] = useState(false);
+ useEffect(() => {
   if (!globalShowSummary) {
+    setIsGlobalHidden(true);
     setState((prev) => ({
       ...prev,
       showSelections: false,
     }));
+  } else if (isGlobalHidden) {
+    setState((prev) => ({
+      ...prev,
+      showSelections: true,
+    }));
+    setIsGlobalHidden(false);
   }
 }, [globalShowSummary]);
 
@@ -190,41 +198,38 @@ const SpecifyRequirements = () => {
                             </IconButton>
                           </Tooltip>
                         </Grid>
-
-                       {globalShowSummary && (
-  <Grid item>
-    <Tooltip
-      title={!state.showSelections ? "Show summary" : "Hide summary!"}
-    >
-      <IconButton onClick={handleToggleShowSelection}>
-        {!state.showSelections ? (
-          <VisibilityIcon color="primary" />
-        ) : (
-          <VisibilityOffIcon color="primary" />
-        )}
-      </IconButton>
-    </Tooltip>
-  </Grid>
-)}
-
-<Grid item sx={{ ml: 1 }}>
-  <Tooltip
-    title={
-      globalShowSummary
-        ? "Hide all summary buttons"
-        : "Show all summary buttons"
-    }
-  >
-    <IconButton onClick={() => setGlobalShowSummary((prev) => !prev)}>
-      {globalShowSummary ? (
-        <VisibilityOffIcon color="primary" />
-      ) : (
-        <VisibilityIcon color="primary" />
-      )}
-    </IconButton>
-  </Tooltip>
-</Grid>
-
+                          <Grid item>
+                            <Tooltip
+                              title={!state.showSelections ? "Show summary" : "Hide summary"}
+                            >
+                              <IconButton onClick={handleToggleShowSelection}>
+                                {!state.showSelections ? (
+                                  <VisibilityIcon color="primary" />
+                                ) : (
+                                  <VisibilityOffIcon color="primary" />
+                                )}
+                              </IconButton>
+                            </Tooltip>
+                          </Grid>
+                            {/* Push global button to the far right */}
+                            <Grid item xs />
+                            <Grid item>
+                              <Tooltip
+                                title={
+                                  globalShowSummary
+                                    ? "Hide all summaries"
+                                    : "Show all summaries"
+                                }
+                              >
+                                <IconButton onClick={() => setGlobalShowSummary((prev) => !prev)}>
+                                  {globalShowSummary ? (
+                                    <VisibilityOffIcon color="primary" />
+                                  ) : (
+                                    <VisibilityIcon color="primary" />
+                                  )}
+                                </IconButton>
+                              </Tooltip>
+                            </Grid>
                       </>
                     )}
                   </Grid>

@@ -186,7 +186,7 @@ const [globalShowSummary, setGlobalShowSummary] = useState(true);
     setVisRef,
     dataset,
     setDataset,
-    globalShowSummary,        // 
+    globalShowSummary,        // Global Hide All Summary
     setGlobalShowSummary,     // Global Hide All Summary
   }}
 
