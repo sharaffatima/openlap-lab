@@ -47,7 +47,6 @@ const VisualizationFilter = () => {
     return acc;
   }, {});
 
-  console.log("📊 [Visualization Type Check]");
   console.log("Required column types for chart:", requiredTypes);
   console.log("Available column types in dataset:", availableTypes);
 
@@ -56,7 +55,7 @@ const VisualizationFilter = () => {
     const sufficient = availableCount >= requiredCount;
     console.log(
       `- ${type}: required = ${requiredCount}, available = ${availableCount} => ${
-        sufficient ? "✅ Sufficient" : "❌ Insufficient"
+        sufficient ? "Sufficient" : "Insufficient"
       }`
     );
   });

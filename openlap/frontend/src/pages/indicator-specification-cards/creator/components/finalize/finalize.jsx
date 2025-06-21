@@ -134,8 +134,8 @@ const Finalize = () => {
           {axisError && (
             <Grid item xs={12}>
               <Typography color="error" align="center">
-                {errorType === "x" && "X-Axis column not found — a categorical column is required"}
-                {errorType === "y" && "Y-Axis column not found — a numerical column is required"}
+                {errorType === "x" && "X-Axis column not found: A categorical column is required"}
+                {errorType === "y" && "Y-Axis column not found: A numerical column is required"}
                 {errorType === "series" && "Chart data (series) not found"}
               </Typography>
             </Grid>
