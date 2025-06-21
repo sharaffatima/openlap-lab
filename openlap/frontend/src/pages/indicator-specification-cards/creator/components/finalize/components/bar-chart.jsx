@@ -274,6 +274,19 @@ const BarChart = ({ customize = false, handleToggleCustomizePanel }) => {
     const yAxisColumn = dataset.columns.find(
       (col) => col.field === selectedYAxis
     );
+    // Log which columns are given for the bar chart if one data type is missing log it here
+    console.log("BarChart Axis Mapping:");
+    if (xAxisColumn) {
+      console.log(`X-Axis: ${xAxisColumn.headerName} ${xAxisColumn.type}`);
+    } else {
+      console.log("X-Axis column not found");
+    }
+
+    if (yAxisColumn) {
+      console.log(`Y-Axis: ${yAxisColumn.headerName} ${yAxisColumn.type}`);
+    } else {
+      console.log("Y-Axis column not found");
+    }
 
     if (!xAxisColumn || !yAxisColumn) return;
 
@@ -389,7 +402,7 @@ const BarChart = ({ customize = false, handleToggleCustomizePanel }) => {
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth>
-            <InputLabel id="x-axis-select-label">X-Axis</InputLabel>
+            <InputLabel id="x-axis-select-label">X-Axis!</InputLabel>
             <Select
               labelId="x-axis-select-label"
               id="x-axis-select"
@@ -433,7 +446,7 @@ const BarChart = ({ customize = false, handleToggleCustomizePanel }) => {
                 variant="contained"
                 onClick={handleToggleCustomizePanel}
               >
-                Customize
+                Customize!
               </Button>
             </Grid>
           </Grid>
