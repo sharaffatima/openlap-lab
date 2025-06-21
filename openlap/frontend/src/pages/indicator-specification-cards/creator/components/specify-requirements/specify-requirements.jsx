@@ -80,6 +80,10 @@ const SpecifyRequirements = () => {
     let tempColumnData = [];
     let tempRows = [];
     requirements.data.forEach((item) => {
+      // Log
+      console.log(
+      `Creating column: "${item.value}" with data type: "${item.type?.type}"`
+      );
       let fieldUUID = uuidv4();
       tempColumnData.push({
         field: fieldUUID,
