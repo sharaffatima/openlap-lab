@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ISCContext } from "../../indicator-specification-card.jsx";
 import {
   Accordion,
@@ -20,7 +20,26 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 
 const Finalize = () => {
-  const { dataset, lockedStep, setLockedStep } = useContext(ISCContext);
+
+  // Error Handling X and Y Axis Data Types
+  const { dataset, visRef, lockedStep, setLockedStep } = useContext(ISCContext);
+  const [axisError, setAxisError] = useState(false);
+  useEffect(() => {
+  const xField = dataset?.columns?.find((col) =>
+    col.field === visRef?.data?.axisOptions?.selectedXAxis
+  );
+  const yField = dataset?.columns?.find((col) =>
+    col.field === visRef?.data?.axisOptions?.selectedYAxis
+  );
+
+  if (!xField || !yField) {
+    setAxisError(true);
+  } else {
+    setAxisError(false);
+  }
+}, [dataset.columns, visRef?.data?.axisOptions?.selectedXAxis, visRef?.data?.axisOptions?.selectedYAxis]);
+
+  
   const [state, setState] = useState({
     showSelections: true,
     openSaveDialog: false,
@@ -112,6 +131,7 @@ const Finalize = () => {
             </Grid>
           </Grid>
         </AccordionSummary>
+
         <AccordionDetails>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -120,11 +140,23 @@ const Finalize = () => {
                 handleToggleCustomizePanel={handleToggleCustomizePanel}
               />
             </Grid>
+
+            {/* ✅ AXIS ERROR MESSAGE */}
+            {axisError && (
+              <Grid item xs={12}>
+                <Typography color="error" align="center">
+                  Required column for X-Axis or Y-Axis not found in dataset.
+                </Typography>
+              </Grid>
+            )}
+
             <Grid item xs={12}>
               <Divider />
             </Grid>
           </Grid>
         </AccordionDetails>
+
+
         <AccordionActions sx={{ py: 2 }}>
           <Grid item xs={12}>
             <Grid container spacing={2} justifyContent="center">
