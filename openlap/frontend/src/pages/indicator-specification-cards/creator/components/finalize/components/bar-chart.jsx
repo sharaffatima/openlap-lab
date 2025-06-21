@@ -408,7 +408,7 @@ const BarChart = ({ customize = false, handleToggleCustomizePanel }) => {
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth>
-            <InputLabel id="x-axis-select-label">X-Axis!</InputLabel>
+            <InputLabel id="x-axis-select-label">X-Axis</InputLabel>
             <Select
               labelId="x-axis-select-label"
               id="x-axis-select"
@@ -452,7 +452,7 @@ const BarChart = ({ customize = false, handleToggleCustomizePanel }) => {
                 variant="contained"
                 onClick={handleToggleCustomizePanel}
               >
-                Customize!
+                Customize
               </Button>
             </Grid>
           </Grid>
