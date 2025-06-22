@@ -98,6 +98,10 @@ const SpecifyRequirements = () => {
     let tempColumnData = [];
     let tempRows = [];
     requirements.data.forEach((item) => {
+      // Log
+      console.log(
+      `Creating column: "${item.value}" with data type: "${item.type?.type}"`
+      );
       let fieldUUID = uuidv4();
       tempColumnData.push({
         field: fieldUUID,
@@ -531,11 +535,19 @@ const SpecifyRequirements = () => {
                     requirements.goalType.verb === "" ||
                     requirements.goal === "" ||
                     requirements.question === "" ||
-                    requirements.indicatorName === ""
+                    requirements.indicatorName === "" ||  requirements.data.some(
+  (item) =>
+    typeof item.value !== "string" ||
+    item.value.trim() === "" ||
+    !item.type ||
+    typeof item.type.type !== "string" ||
+    item.type.type.trim() === ""
+)
+                    
                   }
                   onClick={handleUnlockPath}
                 >
-                  Next
+                  Next 
                 </Button>
               </Grid>
             </Grid>
