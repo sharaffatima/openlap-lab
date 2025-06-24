@@ -19,7 +19,51 @@ import VisualizationDescription from "./visualization-description.jsx";
 import { Recommend } from "@mui/icons-material";
 
 const VisualizationFilter = () => {
+  // Test Log
   const { dataset, visRef, setVisRef } = useContext(ISCContext);
+  useEffect(() => {
+  if (!visRef.chart || !visRef.chart.dataTypes || !dataset.columns) return;
+
+  // Define mapping from dataset type → visualization type
+  const typeMap = {
+    string: "Categorical",
+    number: "Numerical",
+  };
+
+  // Group required types
+  const requiredTypes = visRef.chart.dataTypes.reduce((acc, dt) => {
+    if (dt.required > 0) {
+      acc[dt.type.value] = dt.required;
+    }
+    return acc;
+  }, {});
+
+  // Count available types with remapped labels
+  const availableTypes = dataset.columns.reduce((acc, col) => {
+    const mappedType = typeMap[col.type];
+    if (mappedType) {
+      acc[mappedType] = (acc[mappedType] || 0) + 1;
+    }
+    return acc;
+  }, {});
+
+  console.log("Required column types for chart:", requiredTypes);
+  console.log("Available column types in dataset:", availableTypes);
+
+  Object.entries(requiredTypes).forEach(([type, requiredCount]) => {
+    const availableCount = availableTypes[type] || 0;
+    const sufficient = availableCount >= requiredCount;
+    console.log(
+      `- ${type}: required = ${requiredCount}, available = ${availableCount} => ${
+        sufficient ? "Sufficient" : "Insufficient"
+      }`
+    );
+  });
+}, [visRef.chart, dataset.columns]);
+
+
+
+
   const [state, setState] = React.useState({
     openFilters: false,
     visualizationList: [],

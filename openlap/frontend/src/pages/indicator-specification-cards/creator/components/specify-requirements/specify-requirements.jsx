@@ -2,6 +2,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Accordion,
   AccordionActions,
@@ -16,13 +17,30 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ISCContext } from "../../indicator-specification-card.jsx";
 import DataList from "./components/data-list.jsx";
 import GoalList from "./components/goal-list.jsx";
 
 const SpecifyRequirements = () => {
+  const { globalShowSummary, setGlobalShowSummary } = useContext(ISCContext);
+  const [isGlobalHidden, setIsGlobalHidden] = useState(false);
+ useEffect(() => {
+  if (!globalShowSummary) {
+    setIsGlobalHidden(true);
+    setState((prev) => ({
+      ...prev,
+      showSelections: false,
+    }));
+  } else if (isGlobalHidden) {
+    setState((prev) => ({
+      ...prev,
+      showSelections: true,
+    }));
+    setIsGlobalHidden(false);
+  }
+}, [globalShowSummary]);
+
   const {
     requirements,
     setRequirements,
@@ -79,6 +97,10 @@ const SpecifyRequirements = () => {
     let tempColumnData = [];
     let tempRows = [];
     requirements.data.forEach((item) => {
+      // Log
+      console.log(
+      `Creating column: "${item.value}" with data type: "${item.type?.type}"`
+      );
       let fieldUUID = uuidv4();
       tempColumnData.push({
         field: fieldUUID,
@@ -179,24 +201,38 @@ const SpecifyRequirements = () => {
                             </IconButton>
                           </Tooltip>
                         </Grid>
-
-                        <Grid item>
-                          <Tooltip
-                            title={
-                              !state.showSelections
-                                ? "Show summary"
-                                : "Hide summary"
-                            }
-                          >
-                            <IconButton onClick={handleToggleShowSelection}>
-                              {!state.showSelections ? (
-                                <VisibilityIcon color="primary" />
-                              ) : (
-                                <VisibilityOffIcon color="primary" />
-                              )}
-                            </IconButton>
-                          </Tooltip>
-                        </Grid>
+                          <Grid item>
+                            <Tooltip
+                              title={!state.showSelections ? "Show summary" : "Hide summary"}
+                            >
+                              <IconButton onClick={handleToggleShowSelection}>
+                                {!state.showSelections ? (
+                                  <VisibilityIcon color="primary" />
+                                ) : (
+                                  <VisibilityOffIcon color="primary" />
+                                )}
+                              </IconButton>
+                            </Tooltip>
+                          </Grid>
+                            {/* Push global button to the far right */}
+                            <Grid item xs />
+                            <Grid item>
+                              <Tooltip
+                                title={
+                                  globalShowSummary
+                                    ? "Hide all summaries"
+                                    : "Show all summaries"
+                                }
+                              >
+                                <IconButton onClick={() => setGlobalShowSummary((prev) => !prev)}>
+                                  {globalShowSummary ? (
+                                    <VisibilityOffIcon color="primary" />
+                                  ) : (
+                                    <VisibilityIcon color="primary" />
+                                  )}
+                                </IconButton>
+                              </Tooltip>
+                            </Grid>
                       </>
                     )}
                   </Grid>
@@ -502,19 +538,19 @@ const SpecifyRequirements = () => {
                     requirements.goalType.verb === "" ||
                     requirements.goal === "" ||
                     requirements.question === "" ||
-                    requirements.indicatorName === "" ||
-                    // Disable if any data field is empty
-                    requirements.data.length === 0 ||
-                    requirements.data.some(
-                      (item) =>
-                        !item.value || //Check if "i need data" field is empty
-                        !item.type || //Check if "column type" field is empty (this is a safety check tp prevent errors)
-                        !item.type.type //Check if "column type" field is selected
-                    )
+                    requirements.indicatorName === "" ||  requirements.data.some(
+  (item) =>
+    typeof item.value !== "string" ||
+    item.value.trim() === "" ||
+    !item.type ||
+    typeof item.type.type !== "string" ||
+    item.type.type.trim() === ""
+)
+                    
                   }
                   onClick={handleUnlockPath}
                 >
-                  NEXT
+                  Next 
                 </Button>
               </Grid>
             </Grid>

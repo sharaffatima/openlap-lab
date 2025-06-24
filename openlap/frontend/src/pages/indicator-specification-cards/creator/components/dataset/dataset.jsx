@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ISCContext } from "../../indicator-specification-card.jsx";
 import {
   Accordion,
@@ -22,6 +22,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 
 const Dataset = () => {
+    // Used if Hide All Summary is used
+  const { globalShowSummary } = useContext(ISCContext);
+  useEffect(() => {
+      setState((prev) => ({
+        ...prev,
+        showSelections: globalShowSummary,
+      }));
+    }, [globalShowSummary]);
+
   const { dataset, lockedStep, setLockedStep } = useContext(ISCContext);
   const [state, setState] = useState({
     showSelections: true,

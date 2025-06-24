@@ -265,15 +265,34 @@ const BarChart = ({ customize = false, handleToggleCustomizePanel }) => {
     visRef.data.axisOptions.yAxisOptions,
   ]);
 
-  // * This effect is used to update the chart when the selected X-axis or Y-axis changes.
+  // * This effect is used to log when a column has a data type and which column is preselected.
   useEffect(() => {
     const { selectedXAxis, selectedYAxis } = state.axisOptions;
+
+    if (!selectedXAxis && !selectedYAxis) return; 
+
     const xAxisColumn = dataset.columns.find(
       (col) => col.field === selectedXAxis
     );
     const yAxisColumn = dataset.columns.find(
       (col) => col.field === selectedYAxis
     );
+
+    if (selectedXAxis) {
+      if (xAxisColumn) {
+        console.log(`Visual assigned X-Axis: ${xAxisColumn.headerName} ${xAxisColumn.type}`);
+      } else {
+        console.log("X-Axis column not found");
+      }
+    }
+
+    if (selectedYAxis) {
+      if (yAxisColumn) {
+        console.log(`Visual assigned Y-Axis: ${yAxisColumn.headerName} ${yAxisColumn.type}`);
+      } else {
+        console.log("Y-Axis column not found");
+      }
+    }
 
     if (!xAxisColumn || !yAxisColumn) return;
 

@@ -21,11 +21,17 @@ const DataList = () => {
     setRequirements({ ...requirements, data: newData });
   };
 
-  const handleChangeType = (index, value) => {
-    const newData = [...requirements.data];
-    newData[index].type = value;
-    setRequirements({ ...requirements, data: newData });
+const handleChangeType = (index, value) => {
+  const newData = [...requirements.data];
+  newData[index] = {
+    ...newData[index],
+    type: value || { type: "" }, // fallback to empty object with type
   };
+  setRequirements((prev) => ({
+    ...prev,
+    data: newData,
+  }));
+};
 
   const handleAddDataRow = () => {
     setRequirements((prevState) => ({
@@ -99,8 +105,8 @@ const DataList = () => {
                           />
                         )}
                         onChange={(event, value) => {
-                          if (value) handleChangeType(index, value);
-                        }}
+  handleChangeType(index, value || { type: "" }); // allow clearing
+}} 
                       />
                     </Grid>
                   </Grid>
