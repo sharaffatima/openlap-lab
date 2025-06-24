@@ -353,16 +353,7 @@ const SpecifyRequirements = () => {
                                 onChange={handleFormData}
                               />
                             </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
-                </Grid>
-                                  <Grid item xs={12}>
-                        <Grid container spacing={2} justifyContent="center">
-                          <Grid item xs={12} md={6} mt={3}>
+                          <Grid item >
                                   <Button fullWidth variant="contained"
                                   color="primary"
                                   onClick={handleToggleGoalEdit}
@@ -372,9 +363,16 @@ const SpecifyRequirements = () => {
                                   }>
                                     CONFIRM
                             </Button>   
+
+                            </Grid>
                           </Grid>
                         </Grid>
+                      </Grid>
                     </Grid>
+                  </Grid>
+
+                </Grid>
+                                 
               </>
             ) : (
               <>
@@ -434,12 +432,9 @@ const SpecifyRequirements = () => {
                                 placeholder="e.g., knowing how often these learning materials are viewed by my students."
                                 onChange={handleFormData}
                               />
-                            </Grid>
-                          </Grid>
                         </Grid>
-                                          <Grid item xs={12}>
-                        <Grid container spacing={2} justifyContent="center">
-                          <Grid item xs={12} md={6} mt={3}>
+
+                          <Grid item>
                                   <Button fullWidth variant="contained"
                                   color="primary"
                                   onClick={handleToggleQuestionEdit}
@@ -449,6 +444,7 @@ const SpecifyRequirements = () => {
                           </Grid>
                         </Grid>
                     </Grid>
+
                       </Grid>
                     </Grid>
                   </>
@@ -514,7 +510,6 @@ const SpecifyRequirements = () => {
                     </Grid>
                   </Grid>
                 </Grid>
-
                 <Grid item xs={12}>
                   <Grid container spacing={2} justifyContent="center">
                     <Grid item xs={12} md={8}>
