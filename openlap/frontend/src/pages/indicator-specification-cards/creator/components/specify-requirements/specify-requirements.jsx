@@ -1,3 +1,7 @@
+import CloseIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import React, { useContext, useEffect, useState } from "react";
 import {
   Accordion,
@@ -13,15 +17,10 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { ISCContext } from "../../indicator-specification-card.jsx";
-import GoalList from "./components/goal-list.jsx";
-import DataList from "./components/data-list.jsx";
 import { v4 as uuidv4 } from "uuid";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import EditIcon from "@mui/icons-material/Edit";
-import CloseIcon from "@mui/icons-material/Close";
-import DoneIcon from "@mui/icons-material/Done";
+import { ISCContext } from "../../indicator-specification-card.jsx";
+import DataList from "./components/data-list.jsx";
+import GoalList from "./components/goal-list.jsx";
 
 const SpecifyRequirements = () => {
   const { globalShowSummary, setGlobalShowSummary } = useContext(ISCContext);
@@ -354,26 +353,26 @@ const SpecifyRequirements = () => {
                                 onChange={handleFormData}
                               />
                             </Grid>
-                            <Grid item>
-                              <Tooltip title="Confirm">
-                                <IconButton
+                          <Grid item >
+                                  <Button fullWidth variant="contained"
                                   color="primary"
                                   onClick={handleToggleGoalEdit}
                                   disabled={
                                     requirements.goal.length < 1 ||
                                     requirements.goalType.verb.length < 1
-                                  }
-                                >
-                                  <DoneIcon />
-                                </IconButton>
-                              </Tooltip>
+                                  }>
+                                    CONFIRM
+                            </Button>   
+
                             </Grid>
                           </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
+
                 </Grid>
+                                 
               </>
             ) : (
               <>
@@ -433,20 +432,19 @@ const SpecifyRequirements = () => {
                                 placeholder="e.g., knowing how often these learning materials are viewed by my students."
                                 onChange={handleFormData}
                               />
-                            </Grid>
-                            <Grid item>
-                              <Tooltip title="Confirm">
-                                <IconButton
+                        </Grid>
+
+                          <Grid item>
+                                  <Button fullWidth variant="contained"
                                   color="primary"
                                   onClick={handleToggleQuestionEdit}
-                                  disabled={requirements.question.length < 1}
-                                >
-                                  <DoneIcon />
-                                </IconButton>
-                              </Tooltip>
-                            </Grid>
+                                  disabled={requirements.question.length < 1}>
+                                    CONFIRM
+                            </Button>   
                           </Grid>
                         </Grid>
+                    </Grid>
+
                       </Grid>
                     </Grid>
                   </>
@@ -512,7 +510,6 @@ const SpecifyRequirements = () => {
                     </Grid>
                   </Grid>
                 </Grid>
-
                 <Grid item xs={12}>
                   <Grid container spacing={2} justifyContent="center">
                     <Grid item xs={12} md={8}>
@@ -524,6 +521,7 @@ const SpecifyRequirements = () => {
             )}
           </Grid>
         </AccordionDetails>
+      {requirements.show.indicatorName && (  //the "NEXT" Button is only visible after the last step
         <AccordionActions sx={{ py: 2 }}>
           <Grid item xs={12}>
             <Grid container spacing={2} justifyContent="center">
@@ -552,7 +550,8 @@ const SpecifyRequirements = () => {
               </Grid>
             </Grid>
           </Grid>
-        </AccordionActions>
+          </AccordionActions>
+      )}
       </Accordion>
     </>
   );
