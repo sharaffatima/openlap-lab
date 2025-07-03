@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   Autocomplete,
+  Button,
   FormControl,
   FormHelperText,
   Grid,
@@ -27,6 +28,7 @@ const GoalList = () => {
     goalList: [],
     message: "Loading...",
   });
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
     const loadGoalList = async (api) => {
@@ -39,6 +41,7 @@ const GoalList = () => {
           ...prevState,
           message: "No goals found",
         }));
+        return [];
       }
     };
 
@@ -53,51 +56,80 @@ const GoalList = () => {
     });
   }, []);
 
+  const goalExists = state.goalList.some((goal) => goal.verb === inputValue);
+
+  const handleAddCustomGoal = () => {
+    console.log("Current inputValue:", inputValue);
+    if (inputValue.trim() === "" || goalExists) return;
+
+    console.log("Current inputValue:", inputValue);
+    const newGoal = {
+      id: uuidv4(),
+      verb: inputValue.trim(),
+      custom: true,
+    };
+    const updatedGoals = [...state.goalList, newGoal].sort((a, b) =>
+      a.verb.localeCompare(b.verb)
+    );
+    setState((prevState) => ({
+      ...prevState,
+      goalList: updatedGoals,
+    }));
+    setRequirements((prevState) => ({
+      ...prevState,
+      goalType: newGoal,
+    }));
+    setInputValue(newGoal.verb); // <-- This is the missing part
+  };
+
   return (
-    <>
-      <FormControl fullWidth>
-        <Autocomplete
-          value={requirements.goalType || null}
-          selectOnFocus
-          disablePortal
-          disableClearable
-          clearOnBlur
-          handleHomeEndKeys
-          freeSolo
-          options={state.goalList}
-          onChange={(event, newValue) => {
-            if (newValue === null || newValue === "") {
-              // Handle clear action
-              setRequirements((prevState) => ({
-                ...prevState,
-                goalType: {
-                  verb: "",
-                },
-              }));
-            } else if (typeof newValue === "string") {
-              setRequirements((prevState) => ({
-                ...prevState,
-                goalType: newValue,
-              }));
-            } else if (newValue && newValue.inputValue) {
-              // Create a new value from the user input
-              let tempListOfGoals = [...state.goalList];
-              let newGoal = {
-                id: uuidv4(),
-                verb: newValue.inputValue,
-                custom: true,
-              };
-              setRequirements((prevState) => ({
-                ...prevState,
-                goalType: newGoal,
-              }));
-              tempListOfGoals.push(newGoal);
-              setState((prevState) => ({
-                ...prevState,
-                goalList: tempListOfGoals.sort((a, b) =>
+    <FormControl fullWidth>
+      <Grid container spacing={1} alignItems="flex-start">
+        <Grid item xs>
+          <Autocomplete
+            value={requirements.goalType || null}
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue);
+            }}
+            selectOnFocus
+            disablePortal
+            disableClearable
+            clearOnBlur
+            handleHomeEndKeys
+            freeSolo
+            options={state.goalList}
+            onChange={(event, newValue) => {
+              if (newValue === null || newValue === "") {
+                setInputValue("");
+                setRequirements((prevState) => ({
+                  ...prevState,
+                  goalType: { verb: "" },
+                }));
+              } else if (typeof newValue === "string") {
+                setInputValue(newValue);
+                setRequirements((prevState) => ({
+                  ...prevState,
+                  goalType: { verb: newValue },
+                }));
+              } else if (newValue && newValue.inputValue) {
+                const newGoal = {
+                  id: uuidv4(),
+                  verb: newValue.inputValue,
+                  custom: true,
+                };
+                const updatedGoals = [...state.goalList, newGoal].sort((a, b) =>
                   a.verb.localeCompare(b.verb)
-                ),
-              }));
+                );
+                setInputValue(newValue.inputValue);
+                setState((prevState) => ({
+                  ...prevState,
+                  goalList: updatedGoals,
+                }));
+                setRequirements((prevState) => ({
+                  ...prevState,
+                  goalType: newGoal,
+                }));
             } else {
               setRequirements((prevState) => ({
                 ...prevState,
@@ -124,19 +156,7 @@ const GoalList = () => {
             return option.verb;
           }}
           filterOptions={(options, params) => {
-            const filtered = filter(options, params);
-            const { inputValue } = params;
-            const isExisting = options.some(
-              (option) => inputValue === option.verb
-            );
-            if (inputValue !== "" && !isExisting) {
-              filtered.push({
-                inputValue,
-                verb: `Add "${inputValue}"`,
-              });
-            }
-
-            return filtered;
+            return filter(options, params);
           }}
           renderOption={(props, option) => {
             const { key, ...restProps } = props;
@@ -159,18 +179,13 @@ const GoalList = () => {
                   </Grid>
                   <Grid item>
                     {option.custom && (
-                      <Tooltip
-                        title={
-                          <Typography variant="body2" sx={{ p: 1 }}>
-                            Remove custom goal
-                          </Typography>
-                        }
-                      >
+                      <Tooltip title="Remove custom goal">
                         <IconButton
                           size="small"
                           onClick={(event) => {
                             event.stopPropagation();
                             setState((prevState) => ({
+                              ...prevState,
                               goalList: prevState.goalList.filter(
                                 (goal) => goal.id !== option.id
                               ),
@@ -187,13 +202,26 @@ const GoalList = () => {
             );
           }}
         />
-        {requirements.goalType.verb === "" && (
+        {requirements.goalType?.verb === "" && (
           <FormHelperText sx={{ color: "#b71c1c" }}>
             Select a goal or create a new one
           </FormHelperText>
         )}
+        </Grid>
+        <Grid item>
+          { !goalExists && inputValue.trim() && (
+            <Button 
+              onClick={handleAddCustomGoal}
+              variant="contained"
+              color="primary"
+              sx={{ height: "100%", whiteSpace: "nowrap" }}
+            >
+              Add
+            </Button>
+          )}
+        </Grid>
+      </Grid>
       </FormControl>
-    </>
   );
 };
 
