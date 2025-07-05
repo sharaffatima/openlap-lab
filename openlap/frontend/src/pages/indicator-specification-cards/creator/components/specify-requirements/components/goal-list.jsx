@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { Close as CloseIcon } from "@mui/icons-material";
 import {
   Autocomplete,
   Button,
@@ -10,13 +10,13 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { ISCContext } from "../../../indicator-specification-card.jsx";
-import { Close as CloseIcon } from "@mui/icons-material";
 import { createFilterOptions } from "@mui/material/Autocomplete";
+import { useSnackbar } from "notistack";
+import { useContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { AuthContext } from "../../../../../../setup/auth-context-manager/auth-context-manager.jsx";
+import { ISCContext } from "../../../indicator-specification-card.jsx";
 import { requestAllGoals } from "../utils/requirements-api.js";
-import { useSnackbar } from "notistack";
 
 const filter = createFilterOptions();
 
@@ -60,12 +60,13 @@ const GoalList = () => {
 
   const handleAddCustomGoal = () => {
     console.log("Current inputValue:", inputValue);
-    if (inputValue.trim() === "" || goalExists) return;
+    const trimmed = inputValue.trim();
+    if (!trimmed || goalExists) return;
 
     console.log("Current inputValue:", inputValue);
     const newGoal = {
       id: uuidv4(),
-      verb: inputValue.trim(),
+      verb: trimmed,
       custom: true,
     };
     const updatedGoals = [...state.goalList, newGoal].sort((a, b) =>
@@ -84,7 +85,7 @@ const GoalList = () => {
 
   return (
     <FormControl fullWidth>
-      <Grid container spacing={1} alignItems="flex-start">
+      <Grid container spacing={1} alignItems="center">
         <Grid item xs>
           <Autocomplete
             value={requirements.goalType || null}
@@ -95,7 +96,7 @@ const GoalList = () => {
             selectOnFocus
             disablePortal
             disableClearable
-            clearOnBlur
+            //clearOnBlur  --> this was the problem, it was clearing the input value
             handleHomeEndKeys
             freeSolo
             options={state.goalList}
