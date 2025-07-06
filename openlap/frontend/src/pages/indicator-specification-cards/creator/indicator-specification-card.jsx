@@ -7,6 +7,7 @@ import Visualization from "./components/visualization/visualization.jsx";
 import Dataset from "./components/dataset/dataset.jsx";
 import Finalize from "./components/finalize/finalize.jsx";
 import { useSnackbar } from "notistack";
+import { v4 as uuidv4 } from "uuid";
 
 export const ISCContext = createContext(undefined);
 
@@ -64,6 +65,68 @@ const IndicatorSpecificationCard = () => {
           columns: [],
         };
   });
+
+  const lastUpdateSource = useRef(null);
+
+  // requirements.data -> dataset.columns
+  useEffect(() => {
+    if (lastUpdateSource.current === "dataset") return;
+    lastUpdateSource.current = "requirements";
+
+    const newColumns = requirements.data.map((item, index) => ({
+      field: item.id || `field_${index}`,
+      headerName: item.value || `Column ${index + 1}`,
+      type: item.type?.type || "string",
+      editable: true,
+      sortable: false,
+      width: 200,
+    }));
+
+    const numberOfRows = 3;
+
+    const newRows = [];
+    for (let i = 0; i < numberOfRows; i++) {
+      const row = { id: uuidv4() };
+      newColumns.forEach((col) => {
+        row[col.field] = col.type === "string" 
+          ? `${col.headerName} ${i + 1}`
+          : 0;
+      });
+      newRows.push(row);
+    }
+
+    setDataset((prev) => ({
+      ...prev,
+      columns: newColumns,
+      rows: newRows,
+    }));
+  }, [requirements.data, requirements.numberOfRows]);
+
+  // dataset.columns -> requirements.data TODO needs to be fixed
+  useEffect(() => {
+    if (lastUpdateSource.current === "requirements") return;
+    lastUpdateSource.current = "dataset";
+
+    // Map dataset.columns and dataset.rows into requirements.data
+    const newData = dataset.columns.map((col) => {
+      // Find a sample value from the first row if exists, fallback ""
+      const sampleValue = dataset.rows.length > 0 ? dataset.rows[0][col.field] : "";
+
+      return {
+        id: col.field,             // use dataset field id
+        value: col.headerName,     // column header name as value
+        type: { type: col.type || "string" },
+        exampleValue: sampleValue,
+        placeholder: `e.g., ${col.headerName.toLowerCase()}`,
+      };
+    });
+
+    setRequirements((prev) => ({
+      ...prev,
+      data: newData,
+    }));
+  }, [dataset.columns, dataset.rows]);
+
 
   const [visRef, setVisRef] = useState(() => {
     const savedState = sessionStorage.getItem("session_isc");
