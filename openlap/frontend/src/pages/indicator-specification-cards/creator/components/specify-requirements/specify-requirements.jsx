@@ -53,6 +53,12 @@ const SpecifyRequirements = () => {
     showSelections: true,
   });
 
+  // Log Dataset Changes
+  useEffect(() => {
+  console.log("Dataset updated in specify-requirments.jsx.", dataset.columns);
+}, [dataset.columns]);
+
+
   const handleTogglePanel = () => {
     setLockedStep((prevState) => ({
       ...prevState,
