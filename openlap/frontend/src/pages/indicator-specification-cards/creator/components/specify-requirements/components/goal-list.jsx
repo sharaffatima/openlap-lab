@@ -80,7 +80,7 @@ const GoalList = () => {
       ...prevState,
       goalType: newGoal,
     }));
-    setInputValue(newGoal.verb); // <-- This is the missing part
+    setInputValue(newGoal.verb);
   };
 
   return (
@@ -96,7 +96,6 @@ const GoalList = () => {
             selectOnFocus
             disablePortal
             disableClearable
-            //clearOnBlur  --> this was the problem, it was clearing the input value
             handleHomeEndKeys
             freeSolo
             options={state.goalList}
