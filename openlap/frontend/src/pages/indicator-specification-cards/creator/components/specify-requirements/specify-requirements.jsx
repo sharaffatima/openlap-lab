@@ -57,9 +57,10 @@ const SpecifyRequirements = () => {
   });
 
   // Log Dataset Changes
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("Dataset updated in specify-requirments.jsx.", dataset.columns);
   }, [dataset.columns]);
+  */
   // Update Columns Names in dataset.jsx if they are renmaed in Step 1
   useEffect(() => {
     setDataset((prevDataset) => {
@@ -126,9 +127,11 @@ const SpecifyRequirements = () => {
     let tempRows = [];
     requirements.data.forEach((item) => {
       // Log
+      /*
       console.log(
       `Creating column: "${item.value}" with data type: "${item.type?.type}"`
       );
+      */
       let fieldUUID = uuidv4();
       tempColumnData.push({
         field: fieldUUID,

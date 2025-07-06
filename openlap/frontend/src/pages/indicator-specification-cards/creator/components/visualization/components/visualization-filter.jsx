@@ -55,10 +55,10 @@ const VisualizationFilter = () => {
       }
       return acc;
     }, {});
-
+    /*
     console.log("Required column types for chart:", requiredTypes);
     console.log("Available column types in dataset:", availableTypes);
-
+    */
     const messages = [];
 
     Object.entries(requiredTypes).forEach(([type, requiredCount]) => {

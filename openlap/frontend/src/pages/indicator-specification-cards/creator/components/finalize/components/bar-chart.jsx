@@ -277,7 +277,7 @@ const BarChart = ({ customize = false, handleToggleCustomizePanel }) => {
     const yAxisColumn = dataset.columns.find(
       (col) => col.field === selectedYAxis
     );
-
+    /*
     if (selectedXAxis) {
       if (xAxisColumn) {
         console.log(`Visual assigned X-Axis: ${xAxisColumn.headerName} ${xAxisColumn.type}`);
@@ -293,7 +293,7 @@ const BarChart = ({ customize = false, handleToggleCustomizePanel }) => {
         console.log("Y-Axis column not found");
       }
     }
-
+      */
     if (!xAxisColumn || !yAxisColumn) return;
 
     // * Grouping data by unique X-axis values
