@@ -215,7 +215,7 @@ const BarChart = ({ customize = false, handleToggleCustomizePanel }) => {
       },
       edit: false,
     }));
-  }, [dataset.columns.length]);
+  }, [dataset.columns]);
 
   // * This effect is used to update the chart when the selected X-axis or Y-axis changes.
   useEffect(() => {

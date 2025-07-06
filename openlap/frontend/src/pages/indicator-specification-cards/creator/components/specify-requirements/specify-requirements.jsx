@@ -25,6 +25,7 @@ import GoalList from "./components/goal-list.jsx";
 const SpecifyRequirements = () => {
   const { globalShowSummary, setGlobalShowSummary } = useContext(ISCContext);
   const [isGlobalHidden, setIsGlobalHidden] = useState(false);
+  // Hide / Show All Button 
  useEffect(() => {
   if (!globalShowSummary) {
     setIsGlobalHidden(true);
@@ -48,6 +49,8 @@ const SpecifyRequirements = () => {
     setLockedStep,
     dataset,
     setDataset,
+    visRef,
+  setVisRef,
   } = useContext(ISCContext);
   const [state, setState] = useState({
     showSelections: true,
@@ -55,8 +58,27 @@ const SpecifyRequirements = () => {
 
   // Log Dataset Changes
   useEffect(() => {
-  console.log("Dataset updated in specify-requirments.jsx.", dataset.columns);
-}, [dataset.columns]);
+    console.log("Dataset updated in specify-requirments.jsx.", dataset.columns);
+  }, [dataset.columns]);
+  // Update Columns Names in dataset.jsx if they are renmaed in Step 1
+  useEffect(() => {
+    setDataset((prevDataset) => {
+      const updatedColumns = prevDataset.columns.map((col, index) => {
+        const newHeader = requirements.data[index]?.value;
+        return {
+          ...col,
+          headerName: newHeader || col.headerName,
+        };
+      });
+      return {
+        ...prevDataset,
+        columns: updatedColumns,
+      };
+    });
+  }, [requirements.data, setDataset]);
+
+
+
 
 
   const handleTogglePanel = () => {
