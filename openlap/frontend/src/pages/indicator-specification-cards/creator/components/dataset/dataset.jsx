@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { ISCContext } from "../../indicator-specification-card.jsx";
 import {
   Accordion,
@@ -12,8 +12,10 @@ import {
   IconButton,
   Tooltip,
   Typography,
+  Paper,
 } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
+import { blue, orange } from "@mui/material/colors";
 import DataTableManager from "./data-table-manager/data-table-manager.jsx";
 import DataTable from "./components/data-table.jsx";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -22,16 +24,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 
 const Dataset = () => {
-    // Used if Hide All Summary is used
-  const { globalShowSummary } = useContext(ISCContext);
-  useEffect(() => {
-      setState((prev) => ({
-        ...prev,
-        showSelections: globalShowSummary,
-      }));
-    }, [globalShowSummary]);
-
   const { dataset, lockedStep, setLockedStep } = useContext(ISCContext);
+  const [showCSVUpload, setShowCSVUpload] = useState(false);
   const [state, setState] = useState({
     showSelections: true,
   });
@@ -65,7 +59,9 @@ const Dataset = () => {
       },
     }));
   };
-
+  const showCSV = (setShowCSV) => {
+    setShowCSVUpload(setShowCSV);
+  };
   const handleUnlockFinalize = () => {
     handleTogglePanel();
     setLockedStep((prevState) => ({
@@ -77,7 +73,24 @@ const Dataset = () => {
       },
     }));
   };
-
+  const buttonStyle = (type = "visualization") => {
+    return {
+      height: 150,
+      width: 150,
+      border: "3px solid",
+      borderColor: type === "dataset" ? blue[200] : orange[200],
+      "&:hover": {
+        boxShadow: 5,
+        borderColor: type === "dataset" ? blue[900] : orange[800],
+      },
+      p: 2,
+      borderRadius: 2,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      cursor: "pointer",
+    };
+  };
   return (
     <>
       <Accordion
@@ -106,6 +119,36 @@ const Dataset = () => {
                     </Grid>
                     <Grid item>
                       <Typography>Dataset</Typography>
+                      <Grid
+                        container
+                        justifyContent="center"
+                        spacing={4}
+                        sx={{ py: 2 }}
+                      >
+                        <Grid item>
+                          <Paper
+                            elevation={0}
+                            sx={buttonStyle()}
+                            onClick={() => setShowCSVUpload(false)}
+                          >
+                            <Typography variant="h6" align="center">
+                              Manual Data
+                            </Typography>
+                          </Paper>
+                        </Grid>
+
+                        <Grid item>
+                          <Paper
+                            elevation={0}
+                            sx={buttonStyle("dataset")}
+                            onClick={() => setShowCSVUpload(true)}
+                          >
+                            <Typography variant="h6" align="center">
+                              Upload CSV{" "}
+                            </Typography>
+                          </Paper>
+                        </Grid>
+                      </Grid>
                     </Grid>
                     {!lockedStep.dataset.openPanel && (
                       <>
@@ -169,7 +212,7 @@ const Dataset = () => {
         <AccordionDetails>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <DataTableManager />
+              <DataTableManager showCSV={showCSVUpload} />
             </Grid>
           </Grid>
         </AccordionDetails>

@@ -14,7 +14,7 @@ import NoRowsOverlay from "./components/no-rows-overlay.jsx";
 import ColumnMenu from "./column-menu/column-menu.jsx";
 import TableHeaderBar from "./components/table-header-bar.jsx";
 
-const DataTableManager = () => {
+const DataTableManager = ({ showCSV = false }) => {
   const { dataset, setDataset } = useContext(ISCContext);
   const [state, setState] = useState({
     cellModesModel: {},
@@ -79,16 +79,16 @@ const DataTableManager = () => {
                 ...acc2,
                 [field]: { mode: "view" },
               }),
-              {},
+              {}
             ),
           }),
-          {},
+          {}
         ),
         [params.id]: {
           // Revert the mode of other cells in the same row
           ...Object.keys(prevState.cellModesModel[params.id] || {}).reduce(
             (acc, field) => ({ ...acc, [field]: { mode: "view" } }),
-            {},
+            {}
           ),
           [params.field]: { mode: "edit" },
         },
@@ -144,16 +144,17 @@ const DataTableManager = () => {
 
   const paginatedRows = dataset.rows.slice(
     (state.page - 1) * state.pageSize,
-    state.page * state.pageSize,
+    state.page * state.pageSize
   );
 
   return (
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TableHeaderBar />
+          <TableHeaderBar showCSV={showCSV} />
         </Grid>
         <Grid item xs={12}>
+          {!showCSV && (
           <DataGrid
             columns={dataset.columns}
             rows={paginatedRows}
@@ -189,6 +190,7 @@ const DataTableManager = () => {
               },
             }}
           />
+          )}
         </Grid>
       </Grid>
     </>
