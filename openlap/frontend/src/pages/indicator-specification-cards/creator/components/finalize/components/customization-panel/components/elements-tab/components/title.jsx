@@ -32,6 +32,10 @@ const Title = ({ state, setState }) => {
           ...prevState.options.title,
           align: e.target.value,
         },
+        subtitle: {
+          ...prevState.options.subtitle,
+          align: e.target.value,
+        },
       },
     }));
   };
