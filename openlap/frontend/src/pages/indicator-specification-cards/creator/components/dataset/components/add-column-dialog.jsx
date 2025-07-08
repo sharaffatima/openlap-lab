@@ -157,7 +157,7 @@ const AddColumnDialog = ({ open, toggleOpen }) => {
                   fullWidth
                   value={state.typeSelected}
                   getOptionLabel={(option) => {
-                          return option?.value || "Unknown";
+                          return option?.value || "Select a column type";
                         }}
                   renderOption={(props, option) => {
                     const { key, ...restProps } = props;
