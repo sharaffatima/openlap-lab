@@ -102,31 +102,6 @@ const IndicatorSpecificationCard = () => {
     }));
   }, [requirements.data, requirements.numberOfRows]);
 
-  // dataset.columns -> requirements.data TODO needs to be fixed
-  useEffect(() => {
-    if (lastUpdateSource.current === "requirements") return;
-    lastUpdateSource.current = "dataset";
-
-    // Map dataset.columns and dataset.rows into requirements.data
-    const newData = dataset.columns.map((col) => {
-      // Find a sample value from the first row if exists, fallback ""
-      const sampleValue = dataset.rows.length > 0 ? dataset.rows[0][col.field] : "";
-
-      return {
-        id: col.field,             // use dataset field id
-        value: col.headerName,     // column header name as value
-        type: { type: col.type || "string" },
-        exampleValue: sampleValue,
-        placeholder: `e.g., ${col.headerName.toLowerCase()}`,
-      };
-    });
-
-    setRequirements((prev) => ({
-      ...prev,
-      data: newData,
-    }));
-  }, [dataset.columns, dataset.rows]);
-
 
   const [visRef, setVisRef] = useState(() => {
     const savedState = sessionStorage.getItem("session_isc");

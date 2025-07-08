@@ -16,7 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useSnackbar } from "notistack";
 
 const AddColumnDialog = ({ open, toggleOpen }) => {
-  const { dataset, setDataset } = useContext(ISCContext);
+  const { dataset, setDataset, setRequirements, requirements } = useContext(ISCContext);
   const { enqueueSnackbar } = useSnackbar();
 
   const [state, setState] = useState({
@@ -108,6 +108,20 @@ const AddColumnDialog = ({ open, toggleOpen }) => {
       columns: newColumnData,
     }));
 
+      // Update requirements.data as well
+    setRequirements((prev) => ({
+      ...prev,
+      data: [
+        ...prev.data,
+        {
+          id: fieldUUID,
+          value: state.columnName.value,
+          type: { type: state.typeSelected.type },
+          placeholder: "",
+        },
+      ],
+  }));
+
     enqueueSnackbar("New column added successfully", {
       variant: "success",
     });
@@ -142,7 +156,9 @@ const AddColumnDialog = ({ open, toggleOpen }) => {
                   options={Object.values(DataTypes)}
                   fullWidth
                   value={state.typeSelected}
-                  getOptionLabel={(option) => option.value}
+                  getOptionLabel={(option) => {
+                          return option?.value || "Unknown";
+                        }}
                   renderOption={(props, option) => {
                     const { key, ...restProps } = props;
                     return (
@@ -202,7 +218,6 @@ const AddColumnDialog = ({ open, toggleOpen }) => {
             onClick={handleAddNewColumn}
             disabled={
               state.columnName.value === "" ||
-              !state.numberOfRows ||
               Object.entries(state.typeSelected).length === 0
             }
             autoFocus
