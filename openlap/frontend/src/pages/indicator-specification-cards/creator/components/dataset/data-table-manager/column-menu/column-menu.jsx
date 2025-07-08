@@ -30,14 +30,19 @@ const ColumnMenu = ({ props }) => {
     <>
       <Stack py={0.5}>
         {/* TODO: Make the rename and add row functionalities */}
+        {/* Updated to avoid undefined column if new column is added in dataset step 4. */}
+
         <List
           sx={{ width: "100%", mb: -1 }}
           subheader={
             <ListSubheader>
-              Column type: {props.colDef.dataType.value}
-            </ListSubheader>
+             Column type:{" "}
+              {props.colDef.dataType?.value 
+               ?? props.colDef.type 
+               ?? "Unknown"}
+           </ListSubheader>
           }
-        />
+       />
         <Tooltip
           arrow
           placement="right"
