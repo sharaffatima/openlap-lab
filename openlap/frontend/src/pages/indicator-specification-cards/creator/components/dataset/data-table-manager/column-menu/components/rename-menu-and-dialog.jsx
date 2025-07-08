@@ -14,7 +14,7 @@ import {
 import { Edit as EditIcon } from "@mui/icons-material";
 import { ISCContext } from "../../../../../indicator-specification-card.jsx";
 import { useGridApiContext } from "@mui/x-data-grid";
-
+import SortIcon from "@mui/icons-material/Sort";
 const RenameMenuAndDialog = ({ props, columnMenu, setColumnMenu }) => {
   const { colDef } = props;
   const { dataset, setDataset } = useContext(ISCContext);
@@ -27,6 +27,23 @@ const RenameMenuAndDialog = ({ props, columnMenu, setColumnMenu }) => {
       message: "",
     },
   });
+
+  const handleSortColumn = () => {
+    const sortModel = apiRef.current.getSortModel();    // get current :contentReference[oaicite:0]{index=0}
+    const current   = sortModel[0] || {};
+    let newModel;
+
+    if (current.field !== colDef.field) {
+      newModel = [{ field: colDef.field, sort: "asc" }];
+    } else if (current.sort === "asc") {
+     newModel = [{ field: colDef.field, sort: "desc" }];
+   } else {
+     newModel = [];                                     // remove sorting
+         }
+
+  apiRef.current.setSortModel(newModel);               // apply it :contentReference[oaicite:1]{index=1}
+   apiRef.current.hideColumnMenu();
+ };
 
   const handleToggleColumnRenameDialog = () => {
     setColumnMenu((prevState) => ({
@@ -99,6 +116,14 @@ const RenameMenuAndDialog = ({ props, columnMenu, setColumnMenu }) => {
 
   return (
     <>
+
+         <MenuItem onClick={handleSortColumn}>
+       <ListItemIcon>
+         <SortIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText primary="Sort Column" />
+    </MenuItem>
+
       <MenuItem onClick={handleToggleColumnRenameDialog}>
         <ListItemIcon>
           <EditIcon fontSize="small" />
