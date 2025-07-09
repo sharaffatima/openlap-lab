@@ -1,8 +1,8 @@
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
+import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import React, { useContext, useEffect, useState } from "react";
 import {
   Accordion,
   AccordionActions,
@@ -17,6 +17,8 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import Popover from "@mui/material/Popover";
+import { useContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ISCContext } from "../../indicator-specification-card.jsx";
 import DataList from "./components/data-list.jsx";
@@ -25,7 +27,8 @@ import GoalList from "./components/goal-list.jsx";
 const SpecifyRequirements = () => {
   const { globalShowSummary, setGlobalShowSummary } = useContext(ISCContext);
   const [isGlobalHidden, setIsGlobalHidden] = useState(false);
- useEffect(() => {
+  const [tipAnchor, setTipAnchor] = useState(null); 
+  useEffect(() => {
   if (!globalShowSummary) {
     setIsGlobalHidden(true);
     setState((prev) => ({
@@ -212,8 +215,31 @@ const SpecifyRequirements = () => {
                                   <VisibilityOffIcon color="primary" />
                                 )}
                               </IconButton>
-                            </Tooltip>
-                          </Grid>
+                          </Tooltip>
+                        </Grid>
+                        <Grid item>
+                        <IconButton
+                          size="small"
+                          onClick={(e) => setTipAnchor(e.currentTarget)}
+                          sx={{ ml: 1 }}
+                        >
+                          <TipsAndUpdatesIcon color="primary" />
+                          </IconButton>
+                          <Popover
+                        open={Boolean(tipAnchor)}
+                        anchorEl={tipAnchor}
+                        onClose={() => setTipAnchor(null)}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "left",
+                        }}
+                        
+                      >
+                        <Typography sx={{ p: 2, maxWidth: 250}}>
+                        Tip: Think about what exactly you want to measure, why it matters, and what data you need to help you answer your question.
+                        </Typography>
+                      </Popover>
+                    </Grid>
                             {/* Push global button to the far right */}
                             <Grid item xs />
                             <Grid item>

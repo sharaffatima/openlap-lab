@@ -1,4 +1,9 @@
-import React, { useContext, useState, useEffect } from "react";
+import CloseIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
+import LockIcon from "@mui/icons-material/Lock";
+import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   Accordion,
   AccordionDetails,
@@ -11,13 +16,10 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { ISCContext } from "../../indicator-specification-card.jsx";
 import { blue, orange } from "@mui/material/colors";
-import LockIcon from "@mui/icons-material/Lock";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import EditIcon from "@mui/icons-material/Edit";
-import CloseIcon from "@mui/icons-material/Close";
+import Popover from "@mui/material/Popover";
+import { useContext, useEffect, useState } from "react";
+import { ISCContext } from "../../indicator-specification-card.jsx";
 
 const ChoosePath = () => {
   // Used if Hide All Summary is used
@@ -35,6 +37,9 @@ const ChoosePath = () => {
   const [state, setState] = useState({
     showSelections: true,
   });
+
+  // Used for the tooltip
+  const [tipAnchor, setTipAnchor] = useState(null);
 
   const handleChooseVisualizationPath = () => {
     let vis = "Visualization";
@@ -200,6 +205,31 @@ const ChoosePath = () => {
                         </Grid>
                       </>
                     )}
+                    <Grid item>
+                        <IconButton
+                          size="small"
+                          onClick={(e) => setTipAnchor(e.currentTarget)}
+                          sx={{ ml: 1 }}
+                        >
+                          <TipsAndUpdatesIcon color="primary" />
+                          </IconButton>
+                          <Popover
+                        open={Boolean(tipAnchor)}
+                        anchorEl={tipAnchor}
+                        onClose={() => setTipAnchor(null)}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "left",
+                        }}
+                        
+                      >
+                        <Typography sx={{ p: 2, maxWidth: 250}}>
+                          Tip: Start with data if you already know what values (rows/columns) you want to show.  
+                              Start with visualization if you prefer to pick the chart type first.  
+                              Don’t worry — you’ll complete both steps either way.
+                        </Typography>
+                      </Popover>
+                    </Grid>
                   </Grid>
                 </Grid>
                 {lockedStep.path.openPanel && (

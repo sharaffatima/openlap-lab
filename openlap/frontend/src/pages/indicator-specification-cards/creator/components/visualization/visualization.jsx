@@ -1,4 +1,9 @@
-import React, { useContext, useState, useEffect } from "react";
+import CloseIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
+import LockIcon from "@mui/icons-material/Lock";
+import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   Accordion,
   AccordionActions,
@@ -12,14 +17,11 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import Popover from "@mui/material/Popover";
+import { useContext, useEffect, useState } from "react";
 import { ISCContext } from "../../indicator-specification-card.jsx";
-import LockIcon from "@mui/icons-material/Lock";
 import ChartTypeFilter from "./components/chart-type-filter.jsx";
 import VisualizationFilter from "./components/visualization-filter.jsx";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import EditIcon from "@mui/icons-material/Edit";
-import CloseIcon from "@mui/icons-material/Close";
 
 const Visualization = () => {
   // Used if Hide All Summary is used
@@ -43,6 +45,9 @@ const Visualization = () => {
   const [state, setState] = useState({
     showSelections: true,
   });
+
+  // Used for the tooltip
+  const [tipAnchor, setTipAnchor] = useState(null);
 
   const handleTogglePanel = () => {
     setLockedStep((prevState) => ({
@@ -145,8 +150,37 @@ const Visualization = () => {
                             </IconButton>
                           </Tooltip>
                         </Grid>
+                        
                       </>
                     )}
+                    <Grid item>
+                          <Tooltip title="Tip">
+                            <IconButton
+                              onClick={(event) => setTipAnchor(event.currentTarget)}
+                            >
+                              <TipsAndUpdatesIcon color="primary" />
+                            </IconButton>
+                          </Tooltip>
+                          <Popover
+                            open={Boolean(tipAnchor)}
+                            anchorEl={tipAnchor}
+                            onClose={() => setTipAnchor(null)}
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "left",
+                            }}
+                            transformOrigin={{
+                              vertical: "top",
+                              horizontal: "left",
+                            }}
+                          >
+                            <Typography sx={{ p: 2, maxWidth: 250 }}>
+                              Tip: Choose a chart type that fits your data.  
+		Make sure the number of columns and their types (e.g. categorical or numeric) match the requirements of the selected chart.  
+		Charts that match your dataset are marked with a green thumb icon.
+                            </Typography>
+                          </Popover>
+                        </Grid>
                   </Grid>
                 </Grid>
                 {lockedStep.visualization.openPanel && (
