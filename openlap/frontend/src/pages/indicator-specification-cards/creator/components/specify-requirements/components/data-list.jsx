@@ -10,9 +10,10 @@ import {
 import { Add, Close } from "@mui/icons-material";
 import { ISCContext } from "../../../indicator-specification-card.jsx";
 import { DataTypes } from "../../../utils/data/config.js";
+import { v4 as uuidv4 } from "uuid";
 
 const DataList = () => {
-  const { requirements, setRequirements } = useContext(ISCContext);
+  const { requirements, setRequirements, setDataset } = useContext(ISCContext);
 
   const handleChangeValue = (index, event) => {
     const { name, value } = event.target;
@@ -21,17 +22,50 @@ const DataList = () => {
     setRequirements({ ...requirements, data: newData });
   };
 
-const handleChangeType = (index, value) => {
-  const newData = [...requirements.data];
-  newData[index] = {
-    ...newData[index],
-    type: value || { type: "" }, // fallback to empty object with type
+  const handleChangeType = (index, value) => {
+    const newData = [...requirements.data];
+    newData[index] = {
+      ...newData[index],
+      type: value || { type: "" }, // fallback to empty object with type
+    };
+
+    // Update requirements state
+    setRequirements((prev) => ({
+      ...prev,
+      data: newData,
+    }));
+
+    // Immediately rebuild dataset columns and rows
+    const tempColumnData = newData
+      .filter((item) => item.value && item.type?.type)
+      .map((item) => {
+        const fieldUUID = uuidv4();
+        return {
+          field: fieldUUID,
+          headerName: item.value,
+          sortable: false,
+          editable: true,
+          width: 200,
+          type: item.type.type,
+          dataType: item.type,
+        };
+      });
+
+    const tempRows = Array.from({ length: 3 }, (_, i) => {
+      const row = { id: uuidv4() };
+      tempColumnData.forEach((col) => {
+        row[col.field] = col.type === "string" ? `${col.headerName} ${i + 1}` : 0;
+      });
+      return row;
+    });
+
+   setDataset((prev) => ({
+  ...prev,
+  columns: tempColumnData,
+  rows: tempRows,
+}));
+
   };
-  setRequirements((prev) => ({
-    ...prev,
-    data: newData,
-  }));
-};
 
   const handleAddDataRow = () => {
     setRequirements((prevState) => ({
@@ -105,8 +139,8 @@ const handleChangeType = (index, value) => {
                           />
                         )}
                         onChange={(event, value) => {
-  handleChangeType(index, value || { type: "" }); // allow clearing
-}} 
+                          handleChangeType(index, value || { type: "" });
+                        }}
                       />
                     </Grid>
                   </Grid>
