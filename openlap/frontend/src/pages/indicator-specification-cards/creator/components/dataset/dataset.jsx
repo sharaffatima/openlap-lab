@@ -127,39 +127,6 @@ const Dataset = () => {
                     </Grid>
                     <Grid item>
                       <Typography>Dataset</Typography>
-                      <Grid
-                        container
-                        justifyContent="center"
-                        spacing={4}
-                        sx={{ py: 2 }}
-                      >
-                        <Grid item>
-                          <Paper
-                            elevation={0}
-                            sx={buttonStyle()}
-                            onClick={() => setShowCSVUpload(false)}
-                          >
-                            <Typography variant="h6" align="center">
-                              Manual Data
-                            </Typography>
-                          </Paper>
-                        </Grid>
-
-                        <Grid item>
-                          <Paper
-                            elevation={0}
-                            sx={buttonStyle("dataset")}
-                            onClick={() => {
-                              handleOpenImportDataset();
-                              setShowCSVUpload(true);
-                            }}
-                          >
-                            <Typography variant="h6" align="center">
-                              Upload CSV
-                            </Typography>
-                          </Paper>
-                        </Grid>
-                      </Grid>
                     </Grid>
                     {!lockedStep.dataset.openPanel && (
                       <>
@@ -220,6 +187,34 @@ const Dataset = () => {
             </Grow>
           </Grid>
         </AccordionSummary>
+        <Grid container justifyContent="center" spacing={4} sx={{ py: 2 }}>
+          <Grid item>
+            <Paper
+              elevation={0}
+              sx={buttonStyle()}
+              onClick={() => setShowCSVUpload(false)}
+            >
+              <Typography variant="h6" align="center">
+                Manual Data
+              </Typography>
+            </Paper>
+          </Grid>
+
+          <Grid item>
+            <Paper
+              elevation={0}
+              sx={buttonStyle("dataset")}
+              onClick={() => {
+                handleOpenImportDataset();
+                setShowCSVUpload(true);
+              }}
+            >
+              <Typography variant="h6" align="center">
+                Upload CSV
+              </Typography>
+            </Paper>
+          </Grid>
+        </Grid>
         <AccordionDetails>
           <Grid container spacing={2}>
             <Grid item xs={12}>
