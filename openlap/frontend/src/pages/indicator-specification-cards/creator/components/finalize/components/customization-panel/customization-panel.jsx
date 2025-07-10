@@ -20,6 +20,7 @@ const CustomizationPanel = ({ state, setState }) => {
   const handleChangeTab = (event, newValue) => {
     setTabValue(() => tabData.find((item) => item === newValue));
   };
+  console.log(state)
   useEffect(() => {
     setVisRef((prevVisRef) => ({
       ...prevVisRef,
