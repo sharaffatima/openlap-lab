@@ -195,29 +195,7 @@ const SpecifyRequirements = () => {
                         Specify your goal, question, and indicator
                       </Typography>
                     </Grid>
-                    {!lockedStep.requirements.openPanel && (
-                      <>
-                        <Grid item>
-                          <Tooltip title="Edit requirements">
-                            <IconButton onClick={handleTogglePanel}>
-                              <EditIcon color="primary" />
-                            </IconButton>
-                          </Tooltip>
-                        </Grid>
-                          <Grid item>
-                            <Tooltip
-                              title={!state.showSelections ? "Show summary" : "Hide summary"}
-                            >
-                              <IconButton onClick={handleToggleShowSelection}>
-                                {!state.showSelections ? (
-                                  <VisibilityIcon color="primary" />
-                                ) : (
-                                  <VisibilityOffIcon color="primary" />
-                                )}
-                              </IconButton>
-                          </Tooltip>
-                        </Grid>
-                        <Grid item>
+                                            <Grid item>
                         <IconButton
                           size="small"
                           onClick={(e) => setTipAnchor(e.currentTarget)}
@@ -240,6 +218,29 @@ const SpecifyRequirements = () => {
                         </Typography>
                       </Popover>
                     </Grid>
+                    {!lockedStep.requirements.openPanel && (
+                      <>
+                        <Grid item>
+                          <Tooltip title="Edit requirements">
+                            <IconButton onClick={handleTogglePanel}>
+                              <EditIcon color="primary" />
+                            </IconButton>
+                          </Tooltip>
+                        </Grid>
+                          <Grid item>
+                            <Tooltip
+                              title={!state.showSelections ? "Show summary" : "Hide summary"}
+                            >
+                              <IconButton onClick={handleToggleShowSelection}>
+                                {!state.showSelections ? (
+                                  <VisibilityIcon color="primary" />
+                                ) : (
+                                  <VisibilityOffIcon color="primary" />
+                                )}
+                              </IconButton>
+                          </Tooltip>
+                        </Grid>
+
                             {/* Push global button to the far right */}
                             <Grid item xs />
                             <Grid item>
