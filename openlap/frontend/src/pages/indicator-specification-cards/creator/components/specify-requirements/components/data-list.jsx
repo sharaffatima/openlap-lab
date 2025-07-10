@@ -35,36 +35,6 @@ const DataList = () => {
       data: newData,
     }));
 
-    // Immediately rebuild dataset columns and rows
-    const tempColumnData = newData
-      .filter((item) => item.value && item.type?.type)
-      .map((item) => {
-        const fieldUUID = uuidv4();
-        return {
-          field: fieldUUID,
-          headerName: item.value,
-          sortable: false,
-          editable: true,
-          width: 200,
-          type: item.type.type,
-          dataType: item.type,
-        };
-      });
-
-    const tempRows = Array.from({ length: 3 }, (_, i) => {
-      const row = { id: uuidv4() };
-      tempColumnData.forEach((col) => {
-        row[col.field] = col.type === "string" ? `${col.headerName} ${i + 1}` : 0;
-      });
-      return row;
-    });
-
-   setDataset((prev) => ({
-  ...prev,
-  columns: tempColumnData,
-  rows: tempRows,
-}));
-
   };
 
   const handleAddDataRow = () => {

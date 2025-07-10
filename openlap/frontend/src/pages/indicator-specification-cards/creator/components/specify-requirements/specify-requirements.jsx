@@ -56,31 +56,6 @@ const SpecifyRequirements = () => {
     showSelections: true,
   });
 
-  // Log Dataset Changes
-  /*useEffect(() => {
-    console.log("Dataset updated in specify-requirments.jsx.", dataset.columns);
-  }, [dataset.columns]);
-  */
-  // Update Columns Names in dataset.jsx if they are renmaed in Step 1
-  useEffect(() => {
-    setDataset((prevDataset) => {
-      const updatedColumns = prevDataset.columns.map((col, index) => {
-        const newHeader = requirements.data[index]?.value;
-        return {
-          ...col,
-          headerName: newHeader || col.headerName,
-        };
-      });
-      return {
-        ...prevDataset,
-        columns: updatedColumns,
-      };
-    });
-  }, [requirements.data, setDataset]);
-
-
-
-
 
   const handleTogglePanel = () => {
     setLockedStep((prevState) => ({
