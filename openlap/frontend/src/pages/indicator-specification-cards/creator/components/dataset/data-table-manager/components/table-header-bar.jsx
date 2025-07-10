@@ -67,6 +67,7 @@ const TableHeaderBar = ({ showCSV = false }) => {
               )}
             </Grid>
             <Grid item>
+              {!showCSV && (
               <Tooltip
                 arrow
                 title={
@@ -87,6 +88,7 @@ const TableHeaderBar = ({ showCSV = false }) => {
                   <MoreVertIcon />
                 </IconButton>
               </Tooltip>
+  )}
             </Grid>
           </Grid>
         </Grid>
