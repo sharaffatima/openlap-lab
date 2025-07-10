@@ -15,10 +15,13 @@ import Papa from "papaparse";
 import { v4 as uuidv4 } from "uuid";
 import { DataTypes } from "../../../utils/data/config.js";
 
-const ImportDialog = ({ open, toggleOpen }) => {
+const ImportDialog = ({ open, toggleOpen, setShowCSV=null }) => {
   const { dataset, setDataset } = useContext(ISCContext);
 
   const handleUploadFile = () => {
+    if (setShowCSV) {
+      setShowCSV(false);
+    }
     const reader = new FileReader();
     reader.onload = async ({ target }) => {
       const csv = Papa.parse(target.result, {
