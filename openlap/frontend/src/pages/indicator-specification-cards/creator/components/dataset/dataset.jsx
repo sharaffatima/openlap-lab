@@ -253,6 +253,7 @@ const Dataset = () => {
           <ImportDialog
             open={state.openCsvImport}
             toggleOpen={handleOpenImportDataset}
+            setShowCSV={setShowCSVUpload}
           />
         </AccordionActions>
       </Accordion>
