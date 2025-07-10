@@ -10,9 +10,10 @@ import {
 import { Add, Close } from "@mui/icons-material";
 import { ISCContext } from "../../../indicator-specification-card.jsx";
 import { DataTypes } from "../../../utils/data/config.js";
+import { v4 as uuidv4 } from "uuid";
 
 const DataList = () => {
-  const { requirements, setRequirements } = useContext(ISCContext);
+  const { requirements, setRequirements, setDataset } = useContext(ISCContext);
 
   const handleChangeValue = (index, event) => {
     const { name, value } = event.target;
@@ -21,17 +22,20 @@ const DataList = () => {
     setRequirements({ ...requirements, data: newData });
   };
 
-const handleChangeType = (index, value) => {
-  const newData = [...requirements.data];
-  newData[index] = {
-    ...newData[index],
-    type: value || { type: "" }, // fallback to empty object with type
+  const handleChangeType = (index, value) => {
+    const newData = [...requirements.data];
+    newData[index] = {
+      ...newData[index],
+      type: value || { type: "" }, // fallback to empty object with type
+    };
+
+    // Update requirements state
+    setRequirements((prev) => ({
+      ...prev,
+      data: newData,
+    }));
+
   };
-  setRequirements((prev) => ({
-    ...prev,
-    data: newData,
-  }));
-};
 
   const handleAddDataRow = () => {
     setRequirements((prevState) => ({
@@ -105,8 +109,8 @@ const handleChangeType = (index, value) => {
                           />
                         )}
                         onChange={(event, value) => {
-  handleChangeType(index, value || { type: "" }); // allow clearing
-}} 
+                          handleChangeType(index, value || { type: "" });
+                        }}
                       />
                     </Grid>
                   </Grid>
