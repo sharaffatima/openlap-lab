@@ -22,14 +22,22 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
-
+import ImportDialog from "./components/import-dialog.jsx";
 const Dataset = () => {
   const { dataset, lockedStep, setLockedStep } = useContext(ISCContext);
-  const [showCSVUpload, setShowCSVUpload] = useState(false);
+  const [showCSVUpload, setShowCSVUpload] = useState(true);
+
   const [state, setState] = useState({
     showSelections: true,
+    openCsvImport: false,
   });
 
+  const handleOpenImportDataset = () => {
+    setState((prevState) => ({
+      ...prevState,
+      openCsvImport: !prevState.openCsvImport,
+    }));
+  };
   const handleTogglePanel = () => {
     setLockedStep((prevState) => ({
       ...prevState,
@@ -141,10 +149,13 @@ const Dataset = () => {
                           <Paper
                             elevation={0}
                             sx={buttonStyle("dataset")}
-                            onClick={() => setShowCSVUpload(true)}
+                            onClick={() => {
+                              handleOpenImportDataset();
+                              setShowCSVUpload(true);
+                            }}
                           >
                             <Typography variant="h6" align="center">
-                              Upload CSV{" "}
+                              Upload CSV
                             </Typography>
                           </Paper>
                         </Grid>
@@ -239,6 +250,10 @@ const Dataset = () => {
               </Grid>
             </Grid>
           </Grid>
+          <ImportDialog
+            open={state.openCsvImport}
+            toggleOpen={handleOpenImportDataset}
+          />
         </AccordionActions>
       </Accordion>
     </>

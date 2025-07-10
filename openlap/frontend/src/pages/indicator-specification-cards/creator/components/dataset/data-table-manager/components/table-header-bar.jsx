@@ -60,11 +60,11 @@ const TableHeaderBar = ({ showCSV = false }) => {
         <Grid item xs>
           <Grid container spacing={1} alignItems="center">
             <Grid item xs>
-              {showCSV && (
+              {/* {showCSV && (
                 <Button variant="contained" onClick={handleOpenImportDataset}>
                   Upload CSV
                 </Button>
-              )}
+              )} */}
             </Grid>
             <Grid item>
               {!showCSV && (
