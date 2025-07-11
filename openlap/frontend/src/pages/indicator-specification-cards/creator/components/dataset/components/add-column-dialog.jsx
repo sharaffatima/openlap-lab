@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ISCContext } from "../../../indicator-specification-card.jsx";
 import {
   Autocomplete,
@@ -114,9 +114,8 @@ const AddColumnDialog = ({ open, toggleOpen }) => {
       data: [
         ...prev.data,
         {
-          id: fieldUUID,
           value: state.columnName.value,
-          type: { type: state.typeSelected.type },
+          type: { type: state.typeSelected.type, value: state.typeSelected.value },
           placeholder: "",
         },
       ],

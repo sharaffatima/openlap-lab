@@ -79,6 +79,11 @@ const DataList = () => {
                         fullWidth
                         options={Object.values(DataTypes)}
                         name="type"
+                        value={
+                          Object.values(DataTypes).find(
+                            (dt) => dt.value === (requirement.type?.value || requirement.type?.type)
+                          ) || null
+                        }
                         getOptionLabel={(option) => {
                           return option?.value || "Unknown";
                         }}
