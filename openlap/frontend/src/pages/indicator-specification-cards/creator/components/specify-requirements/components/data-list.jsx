@@ -150,7 +150,6 @@ const DataList = () => {
                   </Grid>
                 </Grid>
 
-                {index > 1 && (
                   <Grid item>
                     <IconButton
                       color="error"
@@ -159,7 +158,7 @@ const DataList = () => {
                       <Close />
                     </IconButton>
                   </Grid>
-                )}
+
               </Grid>
             </Grid>
           );
