@@ -202,11 +202,6 @@ const GoalList = () => {
             );
           }}
         />
-        {requirements.goalType?.verb === "" && (
-          <FormHelperText sx={{ color: "#b71c1c" }}>
-            Select a goal or create a new one
-          </FormHelperText>
-        )}
         </Grid>
         <Grid item>
           { !goalExists && inputValue.trim() && (
@@ -215,14 +210,19 @@ const GoalList = () => {
               variant="contained"
               color="primary"
               sx={{ height: "100%", whiteSpace: "nowrap" }}
+              size = "medium"
             >
               Add
             </Button>
           )}
         </Grid>
       </Grid>
+      {requirements.goalType?.verb === "" && (
+          <FormHelperText sx={{ color: "#b71c1c" }}>
+            Select a goal or create a new one
+          </FormHelperText>
+          )}
       </FormControl>
-  );
-};
+  )};
 
 export default GoalList;
