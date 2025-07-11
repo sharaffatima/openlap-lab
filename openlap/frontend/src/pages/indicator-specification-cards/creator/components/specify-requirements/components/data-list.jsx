@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext , useState } from "react";
 import {
   Autocomplete,
   Button,
@@ -6,6 +6,11 @@ import {
   IconButton,
   TextField,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions
 } from "@mui/material";
 import { Add, Close } from "@mui/icons-material";
 import { ISCContext } from "../../../indicator-specification-card.jsx";
@@ -14,6 +19,9 @@ import { v4 as uuidv4 } from "uuid";
 
 const DataList = () => {
   const { requirements, setRequirements, setDataset } = useContext(ISCContext);
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState(null);
 
   const handleChangeValue = (index, event) => {
     const { name, value } = event.target;
@@ -50,6 +58,27 @@ const DataList = () => {
       data: [...prevState.data].filter((_, index) => index !== indexToRemove),
     }));
   };
+
+  const handleOpenDeleteDialog = (index) => {
+    setRowToDelete(index);
+    setDeleteDialogOpen(true);
+  };
+
+  // Confirm delete
+  const handleConfirmDelete = () => {
+    if (rowToDelete !== null) {
+      handleDeleteDataRow(rowToDelete);
+      setRowToDelete(null);
+      setDeleteDialogOpen(false);
+    }
+  };
+
+  // Cancel delete
+  const handleCancelDelete = () => {
+    setRowToDelete(null);
+    setDeleteDialogOpen(false);
+  };
+
 
   return (
     <>
@@ -125,7 +154,7 @@ const DataList = () => {
                   <Grid item>
                     <IconButton
                       color="error"
-                      onClick={() => handleDeleteDataRow(index)}
+                      onClick={() => handleOpenDeleteDialog(index)}
                     >
                       <Close />
                     </IconButton>
@@ -146,6 +175,25 @@ const DataList = () => {
           </Button>
         </Grid>
       </Grid>
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleCancelDelete}
+      >
+        <DialogTitle>Delete Data Row</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this data row? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmDelete} color="error" variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
