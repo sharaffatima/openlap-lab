@@ -161,10 +161,21 @@ const Dataset = () => {
                         }}
                         
                       >
+                          <IconButton
+                            size="small"
+                            onClick={() => setTipAnchor(null)}
+                            sx={{
+                              position: "absolute",
+                              top: 4,
+                              right: 4,
+                            }}
+                          >
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
                         <Typography sx={{ p: 2, maxWidth: 250}}>
                           Tip: Add your data by filling in the table or uploading a CSV file.  
                           Use the rows to enter the values you want to visualize. You can always add or remove rows and columns as needed.
-                        </Typography>
+                          </Typography>
                       </Popover>
                     </Grid>
                   </Grid>

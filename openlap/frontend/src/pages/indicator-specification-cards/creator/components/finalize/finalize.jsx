@@ -128,8 +128,19 @@ const Finalize = () => {
                             vertical: "bottom",
                             horizontal: "left",
                           }}
-                        >
-                          <Typography sx={{ p: 2, maxWidth: 250 }}>
+                    >
+                          <IconButton
+                            size="small"
+                            onClick={() => setTipAnchor(null)}
+                            sx={{
+                              position: "absolute",
+                              top: 4,
+                              right: 4,
+                            }}
+                          >
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
+                            <Typography sx={{ p: 2, maxWidth: 250 }}>
                             Tip: Take a final look at your indicator with the chosen
                             data. Customize the chart by adding a title, subtitle,
                             and choosing colors that highlight your message. Make

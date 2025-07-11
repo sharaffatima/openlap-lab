@@ -223,6 +223,17 @@ const ChoosePath = () => {
                         }}
                         
                       >
+                          <IconButton
+                            size="small"
+                            onClick={() => setTipAnchor(null)}
+                            sx={{
+                              position: "absolute",
+                              top: 4,
+                              right: 4,
+                            }}
+                          >
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
                         <Typography sx={{ p: 2, maxWidth: 250}}>
                           Tip: Start with data if you already know what values (rows/columns) you want to show.  
                               Start with visualization if you prefer to pick the chart type first.  

@@ -195,28 +195,38 @@ const SpecifyRequirements = () => {
                         Specify your goal, question, and indicator
                       </Typography>
                     </Grid>
-                                            <Grid item>
+                      <Grid item>
                         <IconButton
                           size="small"
                           onClick={(e) => setTipAnchor(e.currentTarget)}
                           sx={{ ml: 1 }}
                         >
                           <TipsAndUpdatesIcon color="primary" />
-                          </IconButton>
-                          <Popover
-                        open={Boolean(tipAnchor)}
-                        anchorEl={tipAnchor}
-                        onClose={() => setTipAnchor(null)}
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "left",
-                        }}
-                        
+                        </IconButton>
+                        <Popover
+                            open={Boolean(tipAnchor)}
+                            anchorEl={tipAnchor}
+                            onClose={() => setTipAnchor(null)}
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "left",
+                            }}
                       >
-                        <Typography sx={{ p: 2, maxWidth: 250}}>
-                        Tip: Think about what exactly you want to measure, why it matters, and what data you need to help you answer your question.
-                        </Typography>
-                      </Popover>
+                          <IconButton
+                            size="small"
+                            onClick={() => setTipAnchor(null)}
+                            sx={{
+                              position: "absolute",
+                              top: 4,
+                              right: 4,
+                            }}
+                          >
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
+                            <Typography sx={{ p: 2, maxWidth: 250}}>
+                              Tip: Think about what exactly you want to measure, why it matters, and what data you need to help you answer your question.
+                            </Typography>
+                      </Popover>                    
                     </Grid>
                     {!lockedStep.requirements.openPanel && (
                       <>

@@ -173,12 +173,23 @@ const Visualization = () => {
                               vertical: "top",
                               horizontal: "left",
                             }}
+                      >
+                          <IconButton
+                            size="small"
+                            onClick={() => setTipAnchor(null)}
+                            sx={{
+                              position: "absolute",
+                              top: 4,
+                              right: 4,
+                            }}
                           >
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
                             <Typography sx={{ p: 2, maxWidth: 250 }}>
                               Tip: Choose a chart type that fits your data.  
 		Make sure the number of columns and their types (e.g. categorical or numeric) match the requirements of the selected chart.  
 		Charts that match your dataset are marked with a green thumb icon.
-                            </Typography>
+                          </Typography>
                           </Popover>
                         </Grid>
                   </Grid>
