@@ -210,7 +210,15 @@ const SpecifyRequirements = () => {
                             anchorOrigin={{
                               vertical: "bottom",
                               horizontal: "left",
-                            }}
+                        }}
+                        PaperProps={{
+                          sx: {
+                            backgroundColor: "primary.main",
+                            color: "primary.contrastText",
+                            position: "absolute",
+                            p: 2,
+                          }
+                        }}
                       >
                           <IconButton
                             size="small"
@@ -219,6 +227,7 @@ const SpecifyRequirements = () => {
                               position: "absolute",
                               top: 4,
                               right: 4,
+                              color: "primary.contrastText",
                             }}
                           >
                             <CloseIcon fontSize="small" />
