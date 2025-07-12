@@ -11,10 +11,7 @@ const NoRowsOverlay = () => {
         sx={{ height: "100%" }}
       >
         <Grid item>
-          <Typography align="center">No data available.</Typography>
-          <Typography align="center">
-            <b>Create a new column</b> to add data to the table
-          </Typography>
+          <Typography align="center">No dataset available.</Typography>
         </Grid>
       </Grid>
     </>
