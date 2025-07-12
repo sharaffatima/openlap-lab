@@ -12,21 +12,33 @@ import {
   IconButton,
   Tooltip,
   Typography,
+  Paper,
 } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
+import { blue, orange } from "@mui/material/colors";
 import DataTableManager from "./data-table-manager/data-table-manager.jsx";
 import DataTable from "./components/data-table.jsx";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
+import ImportDialog from "./components/import-dialog.jsx";
 
 const Dataset = () => {
   const { dataset, lockedStep, setLockedStep } = useContext(ISCContext);
+  const [showCSVUpload, setShowCSVUpload] = useState(true);
   const [state, setState] = useState({
     showSelections: true,
+    openCsvImport: false,
   });
-  console.log(dataset.rows, dataset.columns);
+
+  const handleOpenImportDataset = () => {
+    setState((prevState) => ({
+      ...prevState,
+      openCsvImport: !prevState.openCsvImport,
+    }));
+  };
+
   const handleTogglePanel = () => {
     setLockedStep((prevState) => ({
       ...prevState,
@@ -69,6 +81,23 @@ const Dataset = () => {
     }));
   };
 
+  const buttonStyle = (type = "visualization") => ({
+    height: 150,
+    width: 150,
+    border: "3px solid",
+    borderColor: type === "dataset" ? blue[200] : orange[200],
+    "&:hover": {
+      boxShadow: 5,
+      borderColor: type === "dataset" ? blue[900] : orange[800],
+    },
+    p: 2,
+    borderRadius: 2,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    cursor: "pointer",
+  });
+
   return (
     <>
       <Accordion
@@ -107,7 +136,6 @@ const Dataset = () => {
                             </IconButton>
                           </Tooltip>
                         </Grid>
-
                         <Grid item>
                           <Tooltip
                             title={
@@ -157,13 +185,43 @@ const Dataset = () => {
             </Grow>
           </Grid>
         </AccordionSummary>
+
+        <Grid container justifyContent="center" spacing={4} sx={{ py: 2 }}>
+          <Grid item>
+            <Paper
+              elevation={0}
+              sx={buttonStyle()}
+              onClick={() => setShowCSVUpload(false)}
+            >
+              <Typography variant="h6" align="center">
+                Manual Data
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item>
+            <Paper
+              elevation={0}
+              sx={buttonStyle("dataset")}
+              onClick={() => {
+                handleOpenImportDataset();
+                setShowCSVUpload(true);
+              }}
+            >
+              <Typography variant="h6" align="center">
+                Upload CSV
+              </Typography>
+            </Paper>
+          </Grid>
+        </Grid>
+
         <AccordionDetails>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <DataTableManager />
+              <DataTableManager showCSV={showCSVUpload} />
             </Grid>
           </Grid>
         </AccordionDetails>
+
         <AccordionActions sx={{ py: 2 }}>
           <Grid item xs={12}>
             <Grid container spacing={2} justifyContent="center">
@@ -185,6 +243,11 @@ const Dataset = () => {
               </Grid>
             </Grid>
           </Grid>
+          <ImportDialog
+            open={state.openCsvImport}
+            toggleOpen={handleOpenImportDataset}
+            setShowCSV={setShowCSVUpload}
+          />
         </AccordionActions>
       </Accordion>
     </>
