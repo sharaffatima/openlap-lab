@@ -1,4 +1,8 @@
-import React, { useContext, useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
+import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { ISCContext } from "../../indicator-specification-card.jsx";
 import {
   Accordion,
@@ -14,14 +18,13 @@ import {
   Typography,
   Paper,
 } from "@mui/material";
+import Popover from "@mui/material/Popover";
+import { useContext, useEffect, useState } from "react";
 import LockIcon from "@mui/icons-material/Lock";
 import { blue, orange } from "@mui/material/colors";
 import DataTableManager from "./data-table-manager/data-table-manager.jsx";
+
 import DataTable from "./components/data-table.jsx";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import EditIcon from "@mui/icons-material/Edit";
-import CloseIcon from "@mui/icons-material/Close";
 import ImportDialog from "./components/import-dialog.jsx";
 
 const Dataset = () => {
@@ -31,6 +34,10 @@ const Dataset = () => {
     showSelections: true,
     openCsvImport: false,
   });
+
+  // Used for the tooltip
+  const [tipAnchor, setTipAnchor] = useState(null);
+  
 
   const handleOpenImportDataset = () => {
     setState((prevState) => ({
@@ -152,9 +159,52 @@ const Dataset = () => {
                               )}
                             </IconButton>
                           </Tooltip>
-                        </Grid>
+                        </Grid>                        
                       </>
                     )}
+                    <Grid item>
+                        <IconButton
+                          size="small"
+                          onClick={(e) => setTipAnchor(e.currentTarget)}
+                          sx={{ ml: 1 }}
+                        >
+                          <TipsAndUpdatesIcon color="primary" />
+                          </IconButton>
+                          <Popover
+                        open={Boolean(tipAnchor)}
+                        anchorEl={tipAnchor}
+                        onClose={() => setTipAnchor(null)}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "left",
+                        }}
+                        PaperProps={{
+                          sx: {
+                            backgroundColor: "primary.main",
+                            color: "primary.contrastText",
+                            position: "absolute",
+                            p: 2,
+                          }
+                        }}                        
+                      >
+                          <IconButton
+                            size="small"
+                            onClick={() => setTipAnchor(null)}
+                            sx={{
+                              position: "absolute",
+                              top: 4,
+                              right: 4,
+                              color: "primary.contrastText",
+                            }}
+                          >
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
+                        <Typography sx={{ p: 2, maxWidth: 250}}>
+                          Tip: Add your data by filling in the table or uploading a CSV file.  
+                          Use the rows to enter the values you want to visualize. You can always add or remove rows and columns as needed.
+                          </Typography>
+                      </Popover>
+                    </Grid>
                   </Grid>
                 </Grid>
                 {lockedStep.dataset.openPanel && (

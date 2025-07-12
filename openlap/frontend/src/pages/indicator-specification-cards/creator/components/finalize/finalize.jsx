@@ -1,5 +1,7 @@
-import React, { useContext, useState, useEffect } from "react";
-import { ISCContext } from "../../indicator-specification-card.jsx";
+import CloseIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
+import LockIcon from "@mui/icons-material/Lock";
+import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import {
   Accordion,
   AccordionActions,
@@ -8,16 +10,16 @@ import {
   Button,
   Chip,
   Divider,
-  IconButton,
   Grid,
+  IconButton,
+  Popover,
   Tooltip,
   Typography,
 } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
+import { ISCContext } from "../../indicator-specification-card.jsx";
 import VisSelection from "../visualization/components/vis-selection.jsx";
 import NameDialog from "./components/name-dialog.jsx";
-import LockIcon from "@mui/icons-material/Lock";
-import EditIcon from "@mui/icons-material/Edit";
-import CloseIcon from "@mui/icons-material/Close";
 
 const Finalize = () => {
   const { dataset, visRef, lockedStep, setLockedStep } = useContext(ISCContext);
@@ -52,6 +54,7 @@ const Finalize = () => {
     openSaveDialog: false,
   });
   const [showCustomize, setShowCustomize] = useState(false);
+  const [tipAnchor, setTipAnchor] = useState(null);
 
   const handleTogglePanel = () => {
     setLockedStep((prev) => ({
@@ -98,14 +101,63 @@ const Finalize = () => {
                     <Typography>Preview & Finalize</Typography>
                   </Grid>
                   {!lockedStep.finalize.openPanel && (
-                    <Grid item>
-                      <Tooltip title="Edit and customize visualization">
-                        <IconButton onClick={handleTogglePanel}>
-                          <EditIcon color="primary" />
-                        </IconButton>
-                      </Tooltip>
-                    </Grid>
+                    <>
+                      <Grid item>
+                        <Tooltip title="Edit and customize visualization">
+                          <IconButton onClick={handleTogglePanel}>
+                            <EditIcon color="primary" />
+                          </IconButton>
+                        </Tooltip>
+                      </Grid>
+                      
+                    </>
                   )}
+                  <Grid item>
+                        <IconButton
+                          size="small"
+                          onClick={(e) => setTipAnchor(e.currentTarget)}
+                          sx={{ ml: 1 }}
+                        >
+                          <TipsAndUpdatesIcon color="primary" />
+                        </IconButton>
+                        <Popover
+                          open={Boolean(tipAnchor)}
+                          anchorEl={tipAnchor}
+                          onClose={() => setTipAnchor(null)}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left",
+                      }}
+                      PaperProps={{
+                          sx: {
+                            backgroundColor: "primary.main",
+                            color: "primary.contrastText",
+                            position: "absolute",
+                            p: 2,
+                          }
+                        }}
+                    >
+                          <IconButton
+                            size="small"
+                            onClick={() => setTipAnchor(null)}
+                            sx={{
+                              position: "absolute",
+                              top: 4,
+                              right: 4,
+                              color: "primary.contrastText",
+                            }}
+                          >
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
+                            <Typography sx={{ p: 2, maxWidth: 250 }}>
+                            Tip: Take a final look at your indicator with the chosen
+                            data. Customize the chart by adding a title, subtitle,
+                            and choosing colors that highlight your message. Make
+                            sure everything looks clear and meaningful before you
+                            finish.
+                          </Typography>
+                        </Popover>
+                      </Grid>
                 </Grid>
               </Grid>
               {lockedStep.finalize.openPanel && (
@@ -134,8 +186,10 @@ const Finalize = () => {
           {axisError && (
             <Grid item xs={12}>
               <Typography color="error" align="center">
-                {errorType === "x" && "X-Axis column not found: A categorical column is required"}
-                {errorType === "y" && "Y-Axis column not found: A numerical column is required"}
+                {errorType === "x" &&
+                  "X-Axis column not found: A categorical column is required"}
+                {errorType === "y" &&
+                  "Y-Axis column not found: A numerical column is required"}
                 {errorType === "series" && "Chart data (series) not found"}
               </Typography>
             </Grid>
