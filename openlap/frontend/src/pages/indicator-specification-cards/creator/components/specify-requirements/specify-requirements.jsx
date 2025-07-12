@@ -25,6 +25,7 @@ import GoalList from "./components/goal-list.jsx";
 const SpecifyRequirements = () => {
   const { globalShowSummary, setGlobalShowSummary } = useContext(ISCContext);
   const [isGlobalHidden, setIsGlobalHidden] = useState(false);
+  // Hide / Show All Button 
  useEffect(() => {
   if (!globalShowSummary) {
     setIsGlobalHidden(true);
@@ -48,10 +49,13 @@ const SpecifyRequirements = () => {
     setLockedStep,
     dataset,
     setDataset,
+    visRef,
+  setVisRef,
   } = useContext(ISCContext);
   const [state, setState] = useState({
     showSelections: true,
   });
+
 
   const handleTogglePanel = () => {
     setLockedStep((prevState) => ({
@@ -98,9 +102,11 @@ const SpecifyRequirements = () => {
     let tempRows = [];
     requirements.data.forEach((item) => {
       // Log
+      /*
       console.log(
       `Creating column: "${item.value}" with data type: "${item.type?.type}"`
       );
+      */
       let fieldUUID = uuidv4();
       tempColumnData.push({
         field: fieldUUID,

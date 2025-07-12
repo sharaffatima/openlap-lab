@@ -23,10 +23,10 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import ImportDialog from "./components/import-dialog.jsx";
+
 const Dataset = () => {
   const { dataset, lockedStep, setLockedStep } = useContext(ISCContext);
   const [showCSVUpload, setShowCSVUpload] = useState(true);
-
   const [state, setState] = useState({
     showSelections: true,
     openCsvImport: false,
@@ -38,6 +38,7 @@ const Dataset = () => {
       openCsvImport: !prevState.openCsvImport,
     }));
   };
+
   const handleTogglePanel = () => {
     setLockedStep((prevState) => ({
       ...prevState,
@@ -67,9 +68,7 @@ const Dataset = () => {
       },
     }));
   };
-  const showCSV = (setShowCSV) => {
-    setShowCSVUpload(setShowCSV);
-  };
+
   const handleUnlockFinalize = () => {
     handleTogglePanel();
     setLockedStep((prevState) => ({
@@ -81,24 +80,24 @@ const Dataset = () => {
       },
     }));
   };
-  const buttonStyle = (type = "visualization") => {
-    return {
-      height: 150,
-      width: 150,
-      border: "3px solid",
-      borderColor: type === "dataset" ? blue[200] : orange[200],
-      "&:hover": {
-        boxShadow: 5,
-        borderColor: type === "dataset" ? blue[900] : orange[800],
-      },
-      p: 2,
-      borderRadius: 2,
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      cursor: "pointer",
-    };
-  };
+
+  const buttonStyle = (type = "visualization") => ({
+    height: 150,
+    width: 150,
+    border: "3px solid",
+    borderColor: type === "dataset" ? blue[200] : orange[200],
+    "&:hover": {
+      boxShadow: 5,
+      borderColor: type === "dataset" ? blue[900] : orange[800],
+    },
+    p: 2,
+    borderRadius: 2,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    cursor: "pointer",
+  });
+
   return (
     <>
       <Accordion
@@ -137,7 +136,6 @@ const Dataset = () => {
                             </IconButton>
                           </Tooltip>
                         </Grid>
-
                         <Grid item>
                           <Tooltip
                             title={
@@ -187,6 +185,7 @@ const Dataset = () => {
             </Grow>
           </Grid>
         </AccordionSummary>
+
         <Grid container justifyContent="center" spacing={4} sx={{ py: 2 }}>
           <Grid item>
             <Paper
@@ -199,7 +198,6 @@ const Dataset = () => {
               </Typography>
             </Paper>
           </Grid>
-
           <Grid item>
             <Paper
               elevation={0}
@@ -215,6 +213,7 @@ const Dataset = () => {
             </Paper>
           </Grid>
         </Grid>
+
         <AccordionDetails>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -222,6 +221,7 @@ const Dataset = () => {
             </Grid>
           </Grid>
         </AccordionDetails>
+
         <AccordionActions sx={{ py: 2 }}>
           <Grid item xs={12}>
             <Grid container spacing={2} justifyContent="center">
@@ -229,9 +229,7 @@ const Dataset = () => {
                 <Button
                   fullWidth
                   variant="contained"
-                  disabled={
-                    dataset.rows.length === 0 && dataset.columns.length === 0
-                  }
+                  disabled={dataset.rows.length === 0}
                   onClick={
                     lockedStep.dataset.step === "3"
                       ? handleUnlockVisualization
