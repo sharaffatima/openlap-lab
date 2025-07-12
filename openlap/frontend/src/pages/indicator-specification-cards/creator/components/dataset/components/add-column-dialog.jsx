@@ -1,6 +1,4 @@
-// src/…/AddColumnDialog.jsx
-
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ISCContext } from "../../../indicator-specification-card.jsx";
 import {
   Autocomplete,
@@ -18,7 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useSnackbar } from "notistack";
 
 const AddColumnDialog = ({ open, toggleOpen }) => {
-  const { dataset, setDataset } = useContext(ISCContext);
+  const { dataset, setDataset, setRequirements, requirements } = useContext(ISCContext);
   const { enqueueSnackbar } = useSnackbar();
 
   const [state, setState] = useState({
@@ -64,31 +62,28 @@ const AddColumnDialog = ({ open, toggleOpen }) => {
   };
 
   const handleAddNewColumn = () => {
-    const fieldUUID = uuidv4();
-    const newColumn = {
-      field: fieldUUID,
-      headerName: state.columnName.value,
-      sortable: false,
-      editable: true,
-      width: 200,
-      type: state.typeSelected.type,
-    };
-
-    // build new columns array
-    const newColumns = [...dataset.columns, newColumn];
-
-    // build new rows with a value for the new column
-    let newRows;
-    if (dataset.rows.length > 0) {
-      newRows = dataset.rows.map((row, idx) => ({
+    let fieldUUID = uuidv4();
+    const newColumnData = [
+      ...dataset.columns,
+      {
+        field: fieldUUID,
+        headerName: state.columnName.value,
+        sortable: false,
+        editable: true,
+        width: 200,
+        type: state.typeSelected.type,
+      },
+    ];
+    let newRows = [];
+    if (Boolean(dataset.rows.length)) {
+      newRows = dataset.rows.map((row, index) => ({
         ...row,
         [fieldUUID]:
           state.typeSelected.type === "string"
-            ? `${state.columnName.value} ${idx + 1}`
+            ? `${state.columnName.value} ${index + 1}`
             : 0,
       }));
     } else {
-      newRows = [];
       for (let i = 0; i < state.numberOfRows; i++) {
         newRows.push({
           id: uuidv4(),
@@ -110,9 +105,22 @@ const AddColumnDialog = ({ open, toggleOpen }) => {
     // update context
     setDataset((prev) => ({
       ...prev,
-      columns: newColumns,
       rows: newRows,
+      columns: newColumnData,
     }));
+
+      // Update requirements.data as well
+    setRequirements((prev) => ({
+      ...prev,
+      data: [
+        ...prev.data,
+        {
+          value: state.columnName.value,
+          type: { type: state.typeSelected.type, value: state.typeSelected.value },
+          placeholder: "",
+        },
+      ],
+  }));
 
     enqueueSnackbar("New column added successfully", {
       variant: "success",
