@@ -18,7 +18,7 @@ const DeleteMenuAndDialog = ({ props, columnMenu, setColumnMenu }) => {
   const {
     colDef: { field },
   } = props;
-  const { dataset, setDataset } = useContext(ISCContext);
+  const { dataset, setDataset, requirements, setRequirements } = useContext(ISCContext);
   const apiRef = useGridApiContext();
 
   const handleToggleColumnDeleteDialog = () => {
@@ -28,27 +28,35 @@ const DeleteMenuAndDialog = ({ props, columnMenu, setColumnMenu }) => {
     }));
   };
 
-  const handleConfirmDeleteColumn = () => {
-    let index = dataset.columns.findIndex((col) => col.field === field);
-    if (index !== -1) {
-      let newColumnData = [
-        ...dataset.columns.slice(0, index),
-        ...dataset.columns.slice(index + 1),
-      ];
-      let newRowData = dataset.rows.map((row) => {
-        let { [field]: _, ...newRow } = row;
-        return newRow;
-      });
+const handleConfirmDeleteColumn = () => {
+  let index = dataset.columns.findIndex((col) => col.field === field);
+  if (index !== -1) {
+    let newColumnData = [
+      ...dataset.columns.slice(0, index),
+      ...dataset.columns.slice(index + 1),
+    ];
+    let newRowData = dataset.rows.map((row) => {
+      let { [field]: _, ...newRow } = row;
+      return newRow;
+    });
 
-      setDataset((prevState) => ({
-        ...prevState,
-        rows: newColumnData.length === 0 ? [] : newRowData,
-        columns: newColumnData,
-      }));
-    }
-    apiRef.current.hideColumnMenu();
-    handleToggleColumnDeleteDialog();
-  };
+    setDataset((prevState) => ({
+      ...prevState,
+      rows: newColumnData.length === 0 ? [] : newRowData,
+      columns: newColumnData,
+    }));
+
+    // 🧼 Remove corresponding entry from requirements.data
+    setRequirements((prev) => ({
+      ...prev,
+      data: prev.data.filter((_, i) => i !== index),
+    }));
+  }
+
+  apiRef.current.hideColumnMenu();
+  handleToggleColumnDeleteDialog();
+};
+
 
   return (
     <>
