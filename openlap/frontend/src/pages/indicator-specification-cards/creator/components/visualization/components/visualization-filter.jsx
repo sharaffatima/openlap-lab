@@ -19,50 +19,7 @@ import VisualizationDescription from "./visualization-description.jsx";
 import { Recommend } from "@mui/icons-material";
 
 const VisualizationFilter = () => {
-  // Test Log
   const { dataset, visRef, setVisRef } = useContext(ISCContext);
-  useEffect(() => {
-  if (!visRef.chart || !visRef.chart.dataTypes || !dataset.columns) return;
-
-  // Define mapping from dataset type → visualization type
-  const typeMap = {
-    string: "Categorical",
-    number: "Numerical",
-  };
-
-  // Group required types
-  const requiredTypes = visRef.chart.dataTypes.reduce((acc, dt) => {
-    if (dt.required > 0) {
-      acc[dt.type.value] = dt.required;
-    }
-    return acc;
-  }, {});
-
-  // Count available types with remapped labels
-  const availableTypes = dataset.columns.reduce((acc, col) => {
-    const mappedType = typeMap[col.type];
-    if (mappedType) {
-      acc[mappedType] = (acc[mappedType] || 0) + 1;
-    }
-    return acc;
-  }, {});
-
-  console.log("Required column types for chart:", requiredTypes);
-  console.log("Available column types in dataset:", availableTypes);
-
-  Object.entries(requiredTypes).forEach(([type, requiredCount]) => {
-    const availableCount = availableTypes[type] || 0;
-    const sufficient = availableCount >= requiredCount;
-    console.log(
-      `- ${type}: required = ${requiredCount}, available = ${availableCount} => ${
-        sufficient ? "Sufficient" : "Insufficient"
-      }`
-    );
-  });
-}, [visRef.chart, dataset.columns]);
-
-
-
 
   const [state, setState] = React.useState({
     openFilters: false,
@@ -71,8 +28,57 @@ const VisualizationFilter = () => {
     showDescription: false,
   });
 
+  const [columnError, setColumnError] = React.useState({
+    hasError: false,
+    errorMessages: [],
+  });
+
+  useEffect(() => {
+    if (!visRef.chart || !visRef.chart.dataTypes || !dataset.columns) return;
+
+    const typeMap = {
+      string: "Categorical",
+      number: "Numerical",
+    };
+
+    const requiredTypes = visRef.chart.dataTypes.reduce((acc, dt) => {
+      if (dt.required > 0) {
+        acc[dt.type.value] = dt.required;
+      }
+      return acc;
+    }, {});
+
+    const availableTypes = dataset.columns.reduce((acc, col) => {
+      const mappedType = typeMap[col.type];
+      if (mappedType) {
+        acc[mappedType] = (acc[mappedType] || 0) + 1;
+      }
+      return acc;
+    }, {});
+    /*
+    console.log("Required column types for chart:", requiredTypes);
+    console.log("Available column types in dataset:", availableTypes);
+    */
+    const messages = [];
+
+    Object.entries(requiredTypes).forEach(([type, requiredCount]) => {
+      const availableCount = availableTypes[type] || 0;
+      const sufficient = availableCount >= requiredCount;
+      if (!sufficient) {
+        messages.push(
+          `Missing required ${type} column(s): needed ${requiredCount}, found ${availableCount}`
+        );
+      }
+    });
+
+    if (messages.length > 0) {
+      setColumnError({ hasError: true, errorMessages: messages });
+    } else {
+      setColumnError({ hasError: false, errorMessages: [] });
+    }
+  }, [visRef.chart, dataset.columns]);
+
   const handleSelectVisualization = (chart) => {
-    // TODO: Recheck this
     localStorage.removeItem("categories");
     localStorage.removeItem("series");
     if (visRef.chart.type !== chart.type) {
@@ -129,7 +135,6 @@ const VisualizationFilter = () => {
   };
 
   const checkVisualizationRecommendation = (visualization, columnTypes) => {
-    // Count the total required columns for each type
     let requiredCategorical = 0;
     let requiredNumerical = 0;
     let requiredCatOrdered = 0;
@@ -144,17 +149,10 @@ const VisualizationFilter = () => {
       }
     });
 
-    // Count the available columns of each type in the dataset
-    const availableStrings = columnTypes.filter(
-      (type) => type === "string"
-    ).length;
-    const availableNumbers = columnTypes.filter(
-      (type) => type === "number"
-    ).length;
+    const availableStrings = columnTypes.filter((type) => type === "string").length;
+    const availableNumbers = columnTypes.filter((type) => type === "number").length;
 
-    // Check if the dataset meets the visualization requirements
-    const hasRequiredStrings =
-      availableStrings >= requiredCategorical + requiredCatOrdered;
+    const hasRequiredStrings = availableStrings >= requiredCategorical + requiredCatOrdered;
     const hasRequiredNumbers = availableNumbers >= requiredNumerical;
 
     return hasRequiredStrings && hasRequiredNumbers;
@@ -178,6 +176,17 @@ const VisualizationFilter = () => {
         <AccordionDetails>
           <Grid container spacing={2}>
             <Grid item xs={12}>
+              {/* Show column validation errors */}
+              {columnError.hasError && (
+                <Grid item xs={12}>
+                  {columnError.errorMessages.map((msg, i) => (
+                    <Typography key={i} color="error" align="center">
+                      {msg}
+                    </Typography>
+                  ))}
+                </Grid>
+              )}
+
               <Grid container spacing={2} justifyContent="center">
                 {visRef.filter.type && (
                   <Grid item xs={12}>
@@ -200,9 +209,7 @@ const VisualizationFilter = () => {
                           sm={4}
                           md={2}
                           sx={{ cursor: "pointer" }}
-                          onClick={() =>
-                            handleSelectVisualization(visualization)
-                          }
+                          onClick={() => handleSelectVisualization(visualization)}
                         >
                           <Grid container spacing={2}>
                             <Grid item xs>
@@ -228,8 +235,7 @@ const VisualizationFilter = () => {
                                           boxShadow: 5,
                                         },
                                         border:
-                                          visRef.chart.type ===
-                                          visualization.type
+                                          visRef.chart.type === visualization.type
                                             ? "2px solid #F57C00"
                                             : "",
                                       }}
@@ -276,6 +282,7 @@ const VisualizationFilter = () => {
                         </Grid>
                       );
                     }
+                    return null;
                   })}
                 {state.recommendation && (
                   <Grid item xs={12}>
@@ -298,8 +305,8 @@ const VisualizationFilter = () => {
                 )}
               </Grid>
             </Grid>
+
             <Grid item xs={12}>
-              {/* // TODO: Complete the show and hide description button for the Visualization module */}
               {Boolean(visRef.chart.type) && (
                 <>
                   {!state.showDescription && (
