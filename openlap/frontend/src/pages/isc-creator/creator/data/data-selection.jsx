@@ -720,7 +720,7 @@ export default function DataSelection({
                             </Typography>
                             <Typography align="center">
                               <b>Create a new column</b> to add data to the
-                              table
+                              table hi
                             </Typography>
                           </Grid>
                         </Grid>
