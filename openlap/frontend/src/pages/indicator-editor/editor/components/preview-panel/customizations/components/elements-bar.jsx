@@ -243,7 +243,7 @@ export const ElementsBar = ({ state, setState, chartConfiguration }) => {
         {chartConfiguration.titleAndSubtitlePositionChangeable && (
           <Grid item xs={12}>
             <FormControl>
-              <FormLabel>Title and Subtitle Position</FormLabel>
+              <FormLabel>Title Position</FormLabel>
               <RadioGroup
                 value={state.titleAndSubTitlePosition}
                 onChange={handleTitlePosition}
