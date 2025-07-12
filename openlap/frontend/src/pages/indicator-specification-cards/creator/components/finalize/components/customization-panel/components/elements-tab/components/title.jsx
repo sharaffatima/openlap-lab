@@ -32,6 +32,10 @@ const Title = ({ state, setState }) => {
           ...prevState.options.title,
           align: e.target.value,
         },
+        subtitle: {
+          ...prevState.options.subtitle,
+          align: e.target.value,
+        },
       },
     }));
   };
@@ -84,7 +88,7 @@ const Title = ({ state, setState }) => {
       {state.configuration.isTitleAndSubtitlePositionChangeable && (
         <Grid size={12}>
           <FormControl>
-            <FormLabel>Title Position</FormLabel>
+            <FormLabel>Title & Subtitle Position</FormLabel>
             <RadioGroup
               value={state.options.title.align}
               onChange={handleTitlePosition}
