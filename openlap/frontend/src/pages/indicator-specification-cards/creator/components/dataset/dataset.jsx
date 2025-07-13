@@ -20,7 +20,7 @@ import {
   Alert,
 } from "@mui/material";
 import Popover from "@mui/material/Popover";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import LockIcon from "@mui/icons-material/Lock";
 import { blue, orange } from "@mui/material/colors";
 import DataTableManager from "./data-table-manager/data-table-manager.jsx";
@@ -28,7 +28,10 @@ import DataTable from "./components/data-table.jsx";
 import ImportDialog from "./components/import-dialog.jsx";
 
 const Dataset = () => {
-  const { dataset, lockedStep, setLockedStep } = useContext(ISCContext);
+  const [axisError, setAxisError] = useState(false);
+const [errorType, setErrorType] = useState("");
+
+  const { dataset, lockedStep, setLockedStep, visRef } = useContext(ISCContext);
   const [showCSVUpload, setShowCSVUpload] = useState(true);
   const [state, setState] = useState({
     showSelections: true,
@@ -36,6 +39,26 @@ const Dataset = () => {
   });
 
   const [tipAnchor, setTipAnchor] = useState(null);
+useEffect(() => {
+  const stringCols = dataset.columns.filter((col) => col.type === "string");
+  const numberCols = dataset.columns.filter((col) => col.type === "number");
+  const seriesLoaded =
+    Array.isArray(visRef.data.series) && visRef.data.series.length > 0;
+
+  if (stringCols.length === 0) {
+    setErrorType("x");
+    setAxisError(true);
+  } else if (numberCols.length === 0) {
+    setErrorType("y");
+    setAxisError(true);
+  } else if (!seriesLoaded) {
+    setErrorType("series");
+    setAxisError(true);
+  } else {
+    setAxisError(false);
+    setErrorType("");
+  }
+}, [dataset.columns, visRef.data.series]);
 
   const handleOpenImportDataset = () => {
     setState((prevState) => ({
@@ -140,7 +163,11 @@ const Dataset = () => {
                     <Grid item xs={12} sx={{ mt: 1 }}>
                       <Alert severity="error" variant="outlined" sx={{ pl: 4, pt: 1, pr: 2 }}>
                         
-                        There was a problem processing your dataset.
+                         {errorType === "x" &&
+    "X-Axis column not found: A categorical column is required."}
+  {errorType === "y" &&
+    "Y-Axis column not found: A numerical column is required."}
+  {errorType === "series" && "Chart data (series) not found."}
                       </Alert>
                     </Grid>
 
