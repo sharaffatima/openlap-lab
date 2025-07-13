@@ -17,6 +17,7 @@ import { DataTypes, visualizations } from "../../../utils/data/config.js";
 import { ISCContext } from "../../../indicator-specification-card.jsx";
 import VisualizationDescription from "./visualization-description.jsx";
 import { Recommend } from "@mui/icons-material";
+import Alert from '@mui/material/Alert';
 
 const VisualizationFilter = () => {
   const { dataset, visRef, setVisRef } = useContext(ISCContext);
@@ -178,13 +179,16 @@ const VisualizationFilter = () => {
             <Grid item xs={12}>
               {/* Show column validation errors */}
               {columnError.hasError && (
-                <Grid item xs={12}>
-                  {columnError.errorMessages.map((msg, i) => (
-                    <Typography key={i} color="error" align="center">
-                      {msg}
-                    </Typography>
-                  ))}
-                </Grid>
+      <Grid item xs={12}>
+  <Alert severity="error" variant="outlined">
+    <ul style={{ margin: 0, paddingLeft: 16 }}>
+      {columnError.errorMessages.map((msg, i) => (
+        <li key={i}>{msg}</li>
+      ))}
+    </ul>
+  </Alert>
+</Grid>
+
               )}
 
               <Grid container spacing={2} justifyContent="center">
