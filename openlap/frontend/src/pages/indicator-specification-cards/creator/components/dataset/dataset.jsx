@@ -160,16 +160,23 @@ useEffect(() => {
                     </Grid>
 
                     {/* Error directly under "Dataset" */}
-                    <Grid item xs={12} sx={{ mt: 1 }}>
-                      <Alert severity="error" variant="outlined" sx={{ pl: 4, pt: 1, pr: 2 }}>
-                        
-                         {errorType === "x" &&
-    "X-Axis column not found: A categorical column is required."}
-  {errorType === "y" &&
-    "Y-Axis column not found: A numerical column is required."}
-  {errorType === "series" && "Chart data (series) not found."}
-                      </Alert>
-                    </Grid>
+  {axisError && (
+  <Grid item xs={12} sx={{ mt: 1 }}>
+    <Alert
+      severity="error"
+      variant="outlined"
+      sx={{ pl: 4, pt: 1, pr: 2 }}
+    >
+      {errorType === "x" &&
+        "X-Axis column not found: A categorical column is required."}
+      {errorType === "y" &&
+        "Y-Axis column not found: A numerical column is required."}
+      {errorType === "series" &&
+        "Chart data (series) not found."}
+    </Alert>
+  </Grid>
+)}
+
 
                     {!lockedStep.dataset.openPanel && (
                       <>
