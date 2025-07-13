@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { Tooltip } from "@mui/material";
 import {
   Button,
   Dialog,
@@ -94,12 +95,15 @@ const RenameMenuAndDialog = ({ props, columnMenu, setColumnMenu }) => {
 
   return (
     <>
-      <MenuItem onClick={handleSortColumn}>
-        <ListItemIcon>
-          <SortIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText primary="Sort Column" />
-      </MenuItem>
+<Tooltip title="Only the selected column is sorted." placement="right">
+  <MenuItem onClick={handleSortColumn}>
+    <ListItemIcon>
+      <SortIcon fontSize="small" />
+    </ListItemIcon>
+    <ListItemText primary="Sort Column" />
+  </MenuItem>
+</Tooltip>
+
 
       <MenuItem onClick={handleToggleColumnRenameDialog}>
         <ListItemIcon>
