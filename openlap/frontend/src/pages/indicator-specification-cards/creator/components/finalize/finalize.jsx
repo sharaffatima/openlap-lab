@@ -1,6 +1,7 @@
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import LockIcon from "@mui/icons-material/Lock";
+import Alert from '@mui/material/Alert';
 import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import {
   Accordion,
@@ -78,101 +79,110 @@ const Finalize = () => {
       disabled={lockedStep.finalize.locked}
     >
       <AccordionSummary>
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <Grid
-              container
-              alignItems="center"
-              justifyContent="space-between"
-              spacing={1}
-            >
-              <Grid item xs>
-                <Grid container alignItems="center" spacing={1}>
-                  <Grid item>
-                    {!lockedStep.finalize.locked ? (
-                      <Chip label={lockedStep.finalize.step} color="primary" />
-                    ) : (
-                      <IconButton size="small">
-                        <LockIcon />
-                      </IconButton>
-                    )}
-                  </Grid>
-                  <Grid item>
-                    <Typography>Preview & Finalize</Typography>
-                  </Grid>
-                  {!lockedStep.finalize.openPanel && (
-                    <>
-                      <Grid item>
-                        <Tooltip title="Edit and customize visualization">
-                          <IconButton onClick={handleTogglePanel}>
-                            <EditIcon color="primary" />
-                          </IconButton>
-                        </Tooltip>
-                      </Grid>
-                      
-                    </>
-                  )}
-                  <Grid item>
-                        <IconButton
-                          size="small"
-                          onClick={(e) => setTipAnchor(e.currentTarget)}
-                          sx={{ ml: 1 }}
-                        >
-                          <TipsAndUpdatesIcon color="primary" />
-                        </IconButton>
-                        <Popover
-                          open={Boolean(tipAnchor)}
-                          anchorEl={tipAnchor}
-                          onClose={() => setTipAnchor(null)}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left",
-                      }}
-                      PaperProps={{
-                          sx: {
-                            backgroundColor: "primary.main",
-                            color: "primary.contrastText",
-                            position: "absolute",
-                            p: 2,
-                          }
-                        }}
-                    >
-                          <IconButton
-                            size="small"
-                            onClick={() => setTipAnchor(null)}
-                            sx={{
-                              position: "absolute",
-                              top: 4,
-                              right: 4,
-                              color: "primary.contrastText",
-                            }}
-                          >
-                            <CloseIcon fontSize="small" />
-                          </IconButton>
-                            <Typography sx={{ p: 2, maxWidth: 250 }}>
-                            Tip: Take a final look at your indicator with the chosen
-                            data. Customize the chart by adding a title, subtitle,
-                            and choosing colors that highlight your message. Make
-                            sure everything looks clear and meaningful before you
-                            finish.
-                          </Typography>
-                        </Popover>
-                      </Grid>
-                </Grid>
-              </Grid>
-              {lockedStep.finalize.openPanel && (
+  <Grid container spacing={1}>
+    <Grid item xs={12}>
+      <Grid container alignItems="center" justifyContent="space-between" spacing={1}>
+        <Grid item xs>
+          <Grid container alignItems="center" spacing={1}>
+            <Grid item>
+              {!lockedStep.finalize.locked ? (
+                <Chip label={lockedStep.finalize.step} color="primary" />
+              ) : (
+                <IconButton size="small">
+                  <LockIcon />
+                </IconButton>
+              )}
+            </Grid>
+            <Grid item>
+              <Typography>Preview & Finalize</Typography>
+            </Grid>
+
+            {/* === Axis Error Messages right below title === */}
+{axisError && (
+  <Grid item xs={12} sx={{ pl: 4, pt: 1, pr: 2 }}>
+    <Alert severity="error" variant="outlined">
+      {errorType === "x" &&
+        "X-Axis column not found: A categorical column is required."}
+      {errorType === "y" &&
+        "Y-Axis column not found: A numerical column is required."}
+      {errorType === "series" && "Chart data (series) not found."}
+    </Alert>
+  </Grid>
+)}
+            {/* === End error section === */}
+
+            {!lockedStep.finalize.openPanel && (
+              <>
                 <Grid item>
-                  <Tooltip title="Close panel">
+                  <Tooltip title="Edit and customize visualization">
                     <IconButton onClick={handleTogglePanel}>
-                      <CloseIcon color="primary" />
+                      <EditIcon color="primary" />
                     </IconButton>
                   </Tooltip>
                 </Grid>
-              )}
+              </>
+            )}
+            <Grid item>
+              <IconButton
+                size="small"
+                onClick={(e) => setTipAnchor(e.currentTarget)}
+                sx={{ ml: 1 }}
+              >
+                <TipsAndUpdatesIcon color="primary" />
+              </IconButton>
+              <Popover
+                open={Boolean(tipAnchor)}
+                anchorEl={tipAnchor}
+                onClose={() => setTipAnchor(null)}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                PaperProps={{
+                  sx: {
+                    backgroundColor: "primary.main",
+                    color: "primary.contrastText",
+                    position: "absolute",
+                    p: 2,
+                  },
+                }}
+              >
+                <IconButton
+                  size="small"
+                  onClick={() => setTipAnchor(null)}
+                  sx={{
+                    position: "absolute",
+                    top: 4,
+                    right: 4,
+                    color: "primary.contrastText",
+                  }}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+                <Typography sx={{ p: 2, maxWidth: 250 }}>
+                  Tip: Take a final look at your indicator with the chosen data.
+                  Customize the chart by adding a title, subtitle, and choosing
+                  colors that highlight your message. Make sure everything looks
+                  clear and meaningful before you finish.
+                </Typography>
+              </Popover>
             </Grid>
           </Grid>
         </Grid>
-      </AccordionSummary>
+        {lockedStep.finalize.openPanel && (
+          <Grid item>
+            <Tooltip title="Close panel">
+              <IconButton onClick={handleTogglePanel}>
+                <CloseIcon color="primary" />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        )}
+      </Grid>
+    </Grid>
+  </Grid>
+</AccordionSummary>
+
 
       <AccordionDetails>
         <Grid container spacing={2}>
@@ -183,17 +193,7 @@ const Finalize = () => {
             />
           </Grid>
 
-          {axisError && (
-            <Grid item xs={12}>
-              <Typography color="error" align="center">
-                {errorType === "x" &&
-                  "X-Axis column not found: A categorical column is required"}
-                {errorType === "y" &&
-                  "Y-Axis column not found: A numerical column is required"}
-                {errorType === "series" && "Chart data (series) not found"}
-              </Typography>
-            </Grid>
-          )}
+
 
           <Grid item xs={12}>
             <Divider />

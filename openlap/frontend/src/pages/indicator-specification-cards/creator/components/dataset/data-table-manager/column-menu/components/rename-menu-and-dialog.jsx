@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { Tooltip } from "@mui/material";
 import {
   Button,
   Dialog,
@@ -18,7 +19,7 @@ import { ISCContext } from "../../../../../indicator-specification-card.jsx";
 
 const RenameMenuAndDialog = ({ props, columnMenu, setColumnMenu }) => {
   const { colDef } = props;
-  const { dataset, setDataset } = useContext(ISCContext);
+const { dataset, setDataset, setRequirements } = useContext(ISCContext);
   const apiRef = useGridApiContext();
 
   const [column, setColumn] = useState({
@@ -80,26 +81,41 @@ const RenameMenuAndDialog = ({ props, columnMenu, setColumnMenu }) => {
     }));
   };
 
-  const handleConfirmRenameColumn = (e) => {
-    e.preventDefault();
-    apiRef.current.hideColumnMenu();
-    if (column.value && !column.status.exists) {
-      const updatedCols = dataset.columns.map((c) =>
-        c.field === colDef.field ? { ...c, headerName: column.value } : c
+const handleConfirmRenameColumn = (e) => {
+  e.preventDefault();
+  apiRef.current.hideColumnMenu();
+
+  if (column.value && !column.status.exists) {
+    // 1. Update dataset.columns
+    const updatedCols = dataset.columns.map((c) =>
+      c.field === colDef.field ? { ...c, headerName: column.value } : c
+    );
+    setDataset((p) => ({ ...p, columns: updatedCols }));
+
+    // 2. Update requirements.data
+    setRequirements((prev) => {
+      const updatedData = prev.data.map((item) =>
+        item.value === colDef.headerName ? { ...item, value: column.value } : item
       );
-      setDataset((p) => ({ ...p, columns: updatedCols }));
-      handleToggleColumnRenameDialog();
-    }
-  };
+      return { ...prev, data: updatedData };
+    });
+
+    handleToggleColumnRenameDialog();
+  }
+};
+
 
   return (
     <>
-      <MenuItem onClick={handleSortColumn}>
-        <ListItemIcon>
-          <SortIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText primary="Sort Column" />
-      </MenuItem>
+<Tooltip title="Only the selected column is sorted." placement="right">
+  <MenuItem onClick={handleSortColumn}>
+    <ListItemIcon>
+      <SortIcon fontSize="small" />
+    </ListItemIcon>
+    <ListItemText primary="Sort Column" />
+  </MenuItem>
+</Tooltip>
+
 
       <MenuItem onClick={handleToggleColumnRenameDialog}>
         <ListItemIcon>
