@@ -17,13 +17,13 @@ import {
   Tooltip,
   Typography,
   Paper,
+  Alert,
 } from "@mui/material";
 import Popover from "@mui/material/Popover";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import LockIcon from "@mui/icons-material/Lock";
 import { blue, orange } from "@mui/material/colors";
 import DataTableManager from "./data-table-manager/data-table-manager.jsx";
-
 import DataTable from "./components/data-table.jsx";
 import ImportDialog from "./components/import-dialog.jsx";
 
@@ -35,9 +35,7 @@ const Dataset = () => {
     openCsvImport: false,
   });
 
-  // Used for the tooltip
   const [tipAnchor, setTipAnchor] = useState(null);
-  
 
   const handleOpenImportDataset = () => {
     setState((prevState) => ({
@@ -121,10 +119,13 @@ const Dataset = () => {
                 spacing={1}
               >
                 <Grid item xs>
-                  <Grid container alignItems="center" spacing={1}>
+                  <Grid container spacing={1}>
                     <Grid item>
                       {!lockedStep.dataset.locked ? (
-                        <Chip label={lockedStep.dataset.step} color="primary" />
+                        <Chip
+                          label={lockedStep.dataset.step}
+                          color="primary"
+                        />
                       ) : (
                         <IconButton size="small">
                           <LockIcon />
@@ -134,6 +135,15 @@ const Dataset = () => {
                     <Grid item>
                       <Typography>Dataset</Typography>
                     </Grid>
+
+                    {/* Error directly under "Dataset" */}
+                    <Grid item xs={12} sx={{ mt: 1 }}>
+                      <Alert severity="error" variant="outlined" sx={{ pl: 4, pt: 1, pr: 2 }}>
+                        
+                        There was a problem processing your dataset.
+                      </Alert>
+                    </Grid>
+
                     {!lockedStep.dataset.openPanel && (
                       <>
                         <Grid item>
@@ -159,18 +169,19 @@ const Dataset = () => {
                               )}
                             </IconButton>
                           </Tooltip>
-                        </Grid>                        
+                        </Grid>
                       </>
                     )}
+
                     <Grid item>
-                        <IconButton
-                          size="small"
-                          onClick={(e) => setTipAnchor(e.currentTarget)}
-                          sx={{ ml: 1 }}
-                        >
-                          <TipsAndUpdatesIcon color="primary" />
-                          </IconButton>
-                          <Popover
+                      <IconButton
+                        size="small"
+                        onClick={(e) => setTipAnchor(e.currentTarget)}
+                        sx={{ ml: 1 }}
+                      >
+                        <TipsAndUpdatesIcon color="primary" />
+                      </IconButton>
+                      <Popover
                         open={Boolean(tipAnchor)}
                         anchorEl={tipAnchor}
                         onClose={() => setTipAnchor(null)}
@@ -184,29 +195,32 @@ const Dataset = () => {
                             color: "primary.contrastText",
                             position: "absolute",
                             p: 2,
-                          }
-                        }}                        
+                          },
+                        }}
                       >
-                          <IconButton
-                            size="small"
-                            onClick={() => setTipAnchor(null)}
-                            sx={{
-                              position: "absolute",
-                              top: 4,
-                              right: 4,
-                              color: "primary.contrastText",
-                            }}
-                          >
-                            <CloseIcon fontSize="small" />
-                          </IconButton>
-                        <Typography sx={{ p: 2, maxWidth: 250}}>
-                          Tip: Add your data by filling in the table or uploading a CSV file.  
-                          Use the rows to enter the values you want to visualize. You can always add or remove rows and columns as needed.
-                          </Typography>
+                        <IconButton
+                          size="small"
+                          onClick={() => setTipAnchor(null)}
+                          sx={{
+                            position: "absolute",
+                            top: 4,
+                            right: 4,
+                            color: "primary.contrastText",
+                          }}
+                        >
+                          <CloseIcon fontSize="small" />
+                        </IconButton>
+                        <Typography sx={{ p: 2, maxWidth: 250 }}>
+                          Tip: Add your data by filling in the table or uploading
+                          a CSV file. Use the rows to enter the values you want
+                          to visualize. You can always add or remove rows and
+                          columns as needed.
+                        </Typography>
                       </Popover>
                     </Grid>
                   </Grid>
                 </Grid>
+
                 {lockedStep.dataset.openPanel && (
                   <Grid item>
                     <Tooltip title="Close panel">
@@ -218,6 +232,7 @@ const Dataset = () => {
                 )}
               </Grid>
             </Grid>
+
             <Grow
               in={
                 !lockedStep.dataset.locked &&
