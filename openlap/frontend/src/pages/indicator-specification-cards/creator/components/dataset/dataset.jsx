@@ -31,7 +31,7 @@ const Dataset = () => {
   const [axisError, setAxisError] = useState(false);
 const [errorType, setErrorType] = useState("");
 
-  const { dataset, lockedStep, setLockedStep, visRef } = useContext(ISCContext);
+  const { dataset, lockedStep, setLockedStep, visRef, globalShowSummary } = useContext(ISCContext);
   const [showCSVUpload, setShowCSVUpload] = useState(true);
   const [state, setState] = useState({
     showSelections: true,
@@ -39,6 +39,8 @@ const [errorType, setErrorType] = useState("");
   });
 
   const [tipAnchor, setTipAnchor] = useState(null);
+
+  // Axis Error
 useEffect(() => {
   const stringCols = dataset.columns.filter((col) => col.type === "string");
   const numberCols = dataset.columns.filter((col) => col.type === "number");
@@ -59,6 +61,16 @@ useEffect(() => {
     setErrorType("");
   }
 }, [dataset.columns, visRef.data.series]);
+
+
+// Hide / Show All Summary Button
+useEffect(() => {
+  setState((prevState) => ({
+    ...prevState,
+    showSelections: globalShowSummary,
+  }));
+}, [globalShowSummary]);
+
 
   const handleOpenImportDataset = () => {
     setState((prevState) => ({

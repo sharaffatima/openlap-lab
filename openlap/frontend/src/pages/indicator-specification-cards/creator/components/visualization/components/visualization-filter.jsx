@@ -174,19 +174,22 @@ const VisualizationFilter = () => {
             <b>Available charts</b>
           </Typography>
         </AccordionSummary>
+
+        
         <AccordionDetails>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               {/* Show column validation errors */}
               {columnError.hasError && (
       <Grid item xs={12}>
-  <Alert severity="error" variant="outlined">
-    <ul style={{ margin: 0, paddingLeft: 16 }}>
-      {columnError.errorMessages.map((msg, i) => (
-        <li key={i}>{msg}</li>
-      ))}
-    </ul>
-  </Alert>
+<Alert severity="error" variant="outlined">
+  {columnError.errorMessages.map((msg, i) => (
+    <Typography key={i} sx={{ mb: 0.5 }}>
+      {msg}
+    </Typography>
+  ))}
+</Alert>
+
 </Grid>
 
               )}
