@@ -342,27 +342,31 @@ const SpecifyRequirements = () => {
                       </Grid>
                     </Grid>
                   )}
-                  {requirements.data.length !== 0 &&
-                    (requirements.data[0].value !== "" ||
-                      requirements.data[1].value !== "") && (
-                      <Grid item xs={12}>
-                        <Grid container alignItems="center" spacing={1}>
-                          <Grid item>
-                            <Typography>I need the following data</Typography>
-                          </Grid>
-                          {requirements.data.map((item, index) => {
-                            if (item.value !== "") {
-                              return (
-                                <Grid item key={index}>
-                                  <Chip label={item.value} />
-                                </Grid>
-                              );
-                            }
-                            return undefined;
-                          })}
-                        </Grid>
-                      </Grid>
-                    )}
+
+
+
+
+                  {requirements.data.some((d) => d.value) && (
+                       <Grid item xs={12}>
+                         <Grid container alignItems="center" spacing={1}>
+                           <Grid item>
+                             <Typography>I need the following data</Typography>
+                           </Grid>
+
+                         {requirements.data.map((item, index) =>
+                            item.value ? (
+                             <Grid item key={index}>
+                              <Chip label={item.value} />
+                           </Grid>
+                        ) : null
+                       )}
+                         </Grid>
+                       </Grid>
+                     )}
+
+
+
+
                 </Grid>
               </Grid>
             </Grow>
