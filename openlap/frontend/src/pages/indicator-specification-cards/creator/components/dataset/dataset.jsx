@@ -333,33 +333,48 @@ useEffect(() => {
           </Grid>
         </AccordionDetails>
 
-        <AccordionActions sx={{ py: 2 }}>
-          <Grid item xs={12}>
-            <Grid container spacing={2} justifyContent="center">
-              <Grid item xs={12} md={6}>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  disabled={dataset.rows.length === 0}
-                  onClick={
-                    lockedStep.dataset.step === "3"
-                      ? handleUnlockVisualization
-                      : lockedStep.dataset.step === "4"
-                      ? handleUnlockFinalize
-                      : undefined
-                  }
-                >
-                  Next
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-          <ImportDialog
-            open={state.openCsvImport}
-            toggleOpen={handleOpenImportDataset}
-            setShowCSV={setShowCSVUpload}
-          />
-        </AccordionActions>
+
+ <AccordionActions sx={{ py: 2 }}>
+   <Grid item xs={12}>
+     <Grid container spacing={2} justifyContent="center">
+      {/* info banner shown when no table data are present */}
+      {(dataset.rows.length === 0 || dataset.columns.length === 0) && (
+        <Grid item xs={12}>
+          <Alert severity="error" variant="outlined">
+            No data in dataset to display. Please add some data to proceed.
+          </Alert>
+        </Grid>
+      )}
+
+       <Grid item xs={12} md={6}>
+         <Button
+           fullWidth
+           variant="contained"
+           disabled={
+             dataset.rows.length === 0 || dataset.columns.length === 0
+           }
+           onClick={
+             lockedStep.dataset.step === "3"
+               ? handleUnlockVisualization
+               : lockedStep.dataset.step === "4"
+               ? handleUnlockFinalize
+               : undefined
+           }
+         >
+           Next
+         </Button>
+       </Grid>
+     </Grid>
+   </Grid>
+   <ImportDialog
+     open={state.openCsvImport}
+     toggleOpen={handleOpenImportDataset}
+     setShowCSV={setShowCSVUpload}
+   />
+ </AccordionActions>
+
+
+
       </Accordion>
     </>
   );
