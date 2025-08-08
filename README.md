@@ -42,8 +42,8 @@ These principles aim to foster **lifelong learning environments** and transparen
 * Luca Zemek (AI M)
 
 # ScreenShots
+[**📷Screenshots of Features and Fixes**](./Screenshots.pdf)
 
-TODO
 
 # Live demo video
 
