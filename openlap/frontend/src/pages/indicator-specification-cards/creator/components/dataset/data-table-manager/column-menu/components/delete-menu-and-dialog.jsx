@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext } from 'react';
 import {
   Button,
   Dialog,
@@ -9,93 +9,96 @@ import {
   ListItemText,
   MenuItem,
   Typography,
-} from "@mui/material";
-import { Delete as DeleteIcon } from "@mui/icons-material";
-import { ISCContext } from "../../../../../indicator-specification-card.jsx";
-import { useGridApiContext } from "@mui/x-data-grid";
+} from '@mui/material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
+import { useGridApiContext } from '@mui/x-data-grid';
+
+import { ISCContext } from '../../../../../indicator-specification-card.jsx';
+
+// =============================
+// Constants (avoid magic strings)
+// =============================
+const COPY = {
+  menu: {
+    deleteColumn: 'Delete column',
+  },
+  dialog: {
+    title: 'Are you sure you want to delete this column?',
+    body:
+      'Deleting this dataset will permanently remove all associated data and cannot be undone. Please consider the following before proceeding:',
+    cancel: 'Cancel',
+    confirm: 'Delete',
+  },
+  aria: {
+    openDeleteDialog: 'open delete column dialog',
+    cancelDelete: 'cancel delete column',
+    confirmDelete: 'confirm delete column',
+  },
+};
 
 const DeleteMenuAndDialog = ({ props, columnMenu, setColumnMenu }) => {
   const {
     colDef: { field },
   } = props;
+
   const { dataset, setDataset, requirements, setRequirements } = useContext(ISCContext);
   const apiRef = useGridApiContext();
 
-  const handleToggleColumnDeleteDialog = () => {
-    setColumnMenu((prevState) => ({
-      ...prevState,
-      columnDelete: !prevState.columnDelete,
-    }));
-  };
+  const handleToggleColumnDeleteDialog = useCallback(() => {
+    setColumnMenu((prevState) => ({ ...prevState, columnDelete: !prevState.columnDelete }));
+  }, [setColumnMenu]);
 
-const handleConfirmDeleteColumn = () => {
-  let index = dataset.columns.findIndex((col) => col.field === field);
-  if (index !== -1) {
-    let newColumnData = [
-      ...dataset.columns.slice(0, index),
-      ...dataset.columns.slice(index + 1),
-    ];
-    let newRowData = dataset.rows.map((row) => {
-      let { [field]: _, ...newRow } = row;
-      return newRow;
-    });
+  const handleConfirmDeleteColumn = useCallback(() => {
+    const index = dataset.columns.findIndex((col) => col.field === field);
 
-    setDataset((prevState) => ({
-      ...prevState,
-      rows: newColumnData.length === 0 ? [] : newRowData,
-      columns: newColumnData,
-    }));
+    if (index !== -1) {
+      const newColumnData = [...dataset.columns.slice(0, index), ...dataset.columns.slice(index + 1)];
+      const newRowData = dataset.rows.map((row) => {
+        const { [field]: _removed, ...newRow } = row; // remove the deleted field key from each row
+        return newRow;
+      });
 
-    // 🧼 Remove corresponding entry from requirements.data
-    setRequirements((prev) => ({
-      ...prev,
-      data: prev.data.filter((_, i) => i !== index),
-    }));
-  }
+      setDataset((prevState) => ({
+        ...prevState,
+        rows: newColumnData.length === 0 ? [] : newRowData,
+        columns: newColumnData,
+      }));
 
-  apiRef.current.hideColumnMenu();
-  handleToggleColumnDeleteDialog();
-};
+      // Keep requirements.data aligned with dataset columns
+      setRequirements((prev) => ({ ...prev, data: prev.data.filter((_, i) => i !== index) }));
+    }
 
+    apiRef.current.hideColumnMenu();
+    handleToggleColumnDeleteDialog();
+  }, [apiRef, dataset.columns, dataset.rows, field, handleToggleColumnDeleteDialog, setDataset, setRequirements]);
 
   return (
     <>
-      <MenuItem onClick={handleToggleColumnDeleteDialog}>
+      <MenuItem onClick={handleToggleColumnDeleteDialog} aria-label={COPY.aria.openDeleteDialog}>
         <ListItemIcon>
           <DeleteIcon fontSize="small" color="error" />
         </ListItemIcon>
-        <ListItemText primary="Delete column" />
+        <ListItemText primary={COPY.menu.deleteColumn} />
       </MenuItem>
 
       <Dialog open={columnMenu.columnDelete} fullWidth maxWidth="sm">
-        <DialogTitle>Are you sure you want to delete this column?</DialogTitle>
+        <DialogTitle>{COPY.dialog.title}</DialogTitle>
         <DialogContent>
-          <Typography gutterBottom>
-            Deleting this dataset will permanently remove all associated data
-            and cannot be undone. Please consider the following before
-            proceeding:
-          </Typography>
+          <Typography gutterBottom>{COPY.dialog.body}</Typography>
         </DialogContent>
         <DialogActions>
-          <Button
-            color="primary"
-            onClick={handleToggleColumnDeleteDialog}
-            fullWidth
-          >
-            Cancel
+          <Button color="primary" onClick={handleToggleColumnDeleteDialog} fullWidth aria-label={COPY.aria.cancelDelete}>
+            {COPY.dialog.cancel}
           </Button>
-          <Button
-            onClick={handleConfirmDeleteColumn}
-            variant="contained"
-            color="error"
-            fullWidth
-          >
-            Delete
+          <Button onClick={handleConfirmDeleteColumn} variant="contained" color="error" fullWidth aria-label={COPY.aria.confirmDelete}>
+            {COPY.dialog.confirm}
           </Button>
         </DialogActions>
       </Dialog>
     </>
   );
 };
+
+DeleteMenuAndDialog.displayName = 'DeleteMenuAndDialog';
 
 export default DeleteMenuAndDialog;
